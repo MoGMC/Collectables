@@ -1,0 +1,20 @@
+award:
+  award:developer:
+    name: The Developer Award
+    type: piece of paper
+    display: PAPER
+    description:
+      - A reward given to developers
+  award:winter2015:
+    name: '&r&lA Special Cookie'
+    type: holiday cookie
+    display: COOKIE
+    description:
+      - '&6&oA tasty treat to eat'
+      - '&6Thanks for joining us winter 2015!'
+  award:testaward:
+    name: '&r&lA TEST AWARD'
+    display: COOKIE
+    description:
+      - '&6&oA tasty treat to eat'
+      - '&6Thanks for joining us winter 2015!'

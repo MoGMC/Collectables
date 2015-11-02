@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class CollectablesPlugin extends JavaPlugin {
@@ -31,7 +32,7 @@ public class CollectablesPlugin extends JavaPlugin {
 	private static final int showcaseSize = 18;
 
 	// private final File awards = new File("awards.yml");
-	private YamlConfiguration awards = null;
+	private static YamlConfiguration awards = null;
 
 	@Override
 	public void onEnable() {
@@ -46,6 +47,7 @@ public class CollectablesPlugin extends JavaPlugin {
 
 			File file = new File("awards.yml");
 
+			@SuppressWarnings("resource")
 			FileOutputStream fos = new FileOutputStream(file);
 
 			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
@@ -53,18 +55,24 @@ public class CollectablesPlugin extends JavaPlugin {
 			awards = YamlConfiguration.loadConfiguration(file);
 
 		} catch (IOException e) {
-			Bukkit.getLogger().severe("Failed to fetch awards.yml");
+			Bukkit.getLogger().severe("Failed to fetch awards.yml, disabling.");
 			e.printStackTrace();
 			Bukkit.getPluginManager().disablePlugin(this);
+			return;
 
 		}
+
+		// register this as an api for bukkit
+		this.getServer().getServicesManager().register(CollectablesPlugin.class, this, this, ServicePriority.Normal);
 
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-		if (command.getName().equalsIgnoreCase("showcase")) {
+		String cmd = command.getName();
+
+		if (cmd.equalsIgnoreCase("showcase")) {
 			// display showcase
 
 			if (!(sender instanceof Player)) {
@@ -74,6 +82,23 @@ public class CollectablesPlugin extends JavaPlugin {
 			}
 
 			Player player = (Player) sender;
+
+			// looking at other people's things
+			if (args.length != 0) {
+
+				Player splayer = (Player) Bukkit.getOfflinePlayer(args[0]);
+
+				if (splayer == null) {
+					sender.sendMessage(ChatColor.DARK_RED + "Could not find player \"" + args[0] + "\"");
+					return true;
+
+				}
+
+				player.openInventory(getShowcase(splayer));
+
+				return true;
+
+			}
 
 			player.openInventory(getShowcase(player));
 
@@ -161,11 +186,13 @@ public class CollectablesPlugin extends JavaPlugin {
 
 			// add "level X item" branding
 			description.add(0, "");
-			description.add(0, ChatColor.GRAY + "Level " + config.getString(rootPath + awardName + ".level") + " " + awards.getString(rootAward + ".type"));
+			description.add(0, ChatColor.GRAY + "Level " + config.getString(rootPath + awardName + ".level") + " "
+					+ awards.getString(rootAward + ".type"));
 
 			// add "granted to PLAYER on DATE"
 			description.add("");
-			description.add(ChatColor.GRAY + "Granted to " + player.getName() + " on " + new Date(config.getLong(rootPath + awardName + ".date")).toString());
+			description.add(ChatColor.GRAY + "Granted to " + player.getName() + " on "
+					+ new Date(config.getLong(rootPath + awardName + ".date")).toString());
 
 			// set lore to description in config
 			meta.setLore(description);
