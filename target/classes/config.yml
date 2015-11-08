@@ -1,0 +1,7 @@
+awardfile: 'https://github.com/seawee65/Collectables/blob/master/awards.yml'
+player:
+  b834652b-3ed2-4afd-92de-afce4dcf80f1:
+    awards:
+      award:developer:
+        date: 968630400000
+        level: 20

@@ -6,9 +6,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -34,11 +35,14 @@ public class CollectablesPlugin extends JavaPlugin {
 	// private final File awards = new File("awards.yml");
 	private static YamlConfiguration awards = null;
 
+	private Database db;
+
 	@Override
 	public void onEnable() {
 		saveDefaultConfig();
 		config = getConfig();
 
+		/* Load award yaml */
 		try {
 
 			URL website = new URL(config.getString("awardfile"));
@@ -56,6 +60,18 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		} catch (IOException e) {
 			Bukkit.getLogger().severe("Failed to fetch awards.yml, disabling.");
+			e.printStackTrace();
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+
+		}
+
+		// Connect to MySQL server
+		try {
+			db = new Database();
+
+		} catch (SQLException e) {
+			Bukkit.getLogger().severe("Failed to connect to MySQL database, disabling.");
 			e.printStackTrace();
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
@@ -91,7 +107,6 @@ public class CollectablesPlugin extends JavaPlugin {
 				if (splayer == null) {
 					sender.sendMessage(ChatColor.DARK_RED + "Could not find player \"" + args[0] + "\"");
 					return true;
-
 				}
 
 				player.openInventory(getShowcase(splayer));
@@ -110,60 +125,34 @@ public class CollectablesPlugin extends JavaPlugin {
 
 	}
 
-	public static boolean hasAward(UUID uuid, String awardID) {
-		return doesExist("player." + uuid + ".awards." + awardID);
-
-	}
-
-	// assuming you did all the checks before
-	public void setLevel(UUID uuid, String awardID, String level) {
-		config.set("player." + uuid + ".awards." + awardID + ".level", level);
-
-		this.saveConfig();
-
-	}
-
-	// assuming you did all the checks before
-	public void giveAward(UUID uuid, String awardID, String baseLevel) {
-		String root = "player." + uuid + ".awards." + awardID;
-		config.set(root + ".date", System.currentTimeMillis());
-		config.set(root + ".level", baseLevel);
-
-		this.saveConfig();
-
-	}
-
-	public static boolean awardExists(String awardID) {
-		return config.contains("award." + awardID);
-
-	}
-
-	public static boolean doesExist(String path) {
-		return config.contains(path);
-
-	}
-
 	public Inventory getShowcase(Player player) {
 
 		Inventory showcase = Bukkit.createInventory(null, showcaseSize, player.getDisplayName() + "'s showcase");
 
-		// if player doesn't have any awards, return empty inventory.
-		if (!doesExist("player." + player.getUniqueId())) {
+		// query database
+		ArrayList<Award> awardslist;
+		try {
+			awardslist = db.queryShowcase(player.getUniqueId());
+
+		} catch (SQLException e) {
+			player.sendMessage(ChatColor.DARK_RED
+					+ "Database error while running getShowcase. Please report on the forums along with the following number: "
+					+ System.currentTimeMillis());
+			e.printStackTrace();
+
 			return showcase;
 
 		}
 
-		String rootPath = "player." + player.getUniqueId() + ".awards";
-
-		// get all awards player has
-		Set<String> awardNames = config.getConfigurationSection(rootPath).getKeys(false);
-
-		rootPath += ".";
+		// if player doesn't have any awards, return empty inventory.
+		if (awardslist.isEmpty()) {
+			return showcase;
+		}
 
 		// loop thru all awards and set em up
-		for (String awardName : awardNames) {
+		for (Award a : awardslist) {
 
-			String rootAward = "award." + awardName;
+			String rootAward = "award." + a.getId();
 
 			// create the actual award to display TODO: maybe add level
 			// indicator as quantity in stack?
@@ -186,13 +175,11 @@ public class CollectablesPlugin extends JavaPlugin {
 
 			// add "level X item" branding
 			description.add(0, "");
-			description.add(0, ChatColor.GRAY + "Level " + config.getString(rootPath + awardName + ".level") + " "
-					+ awards.getString(rootAward + ".type"));
+			description.add(0, ChatColor.GRAY + "Level " + a.getLevel() + " " + awards.getString(rootAward + ".type"));
 
 			// add "granted to PLAYER on DATE"
 			description.add("");
-			description.add(ChatColor.GRAY + "Granted to " + player.getName() + " on "
-					+ new Date(config.getLong(rootPath + awardName + ".date")).toString());
+			description.add(ChatColor.GRAY + "Granted to " + player.getName() + " on " + new Date(a.date).toString());
 
 			// set lore to description in config
 			meta.setLore(description);
@@ -204,6 +191,36 @@ public class CollectablesPlugin extends JavaPlugin {
 		}
 
 		return showcase;
+
+	}
+
+	/* API methods */
+
+	public boolean awardExists(String awardID) {
+		return config.contains("award." + awardID);
+
+	}
+
+	public boolean doesExist(String path) {
+		return config.contains(path);
+
+	}
+
+	// might throw an error
+	public boolean hasAward(UUID uuid, short awardId) {
+		return db.doesExist(uuid, awardId);
+
+	}
+
+	// assuming you did all the checks before
+	public void setLevel(UUID uuid, short awardId, int level) throws SQLException {
+		db.setLevel(uuid, awardId, level);
+
+	}
+
+	// assuming you did all the checks before
+	public void giveAward(UUID uuid, short awardId, int baseLevel) throws SQLException {
+		db.giveAward(uuid, awardId, System.currentTimeMillis(), baseLevel);
 
 	}
 
