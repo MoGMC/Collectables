@@ -1,0 +1,6 @@
+Category ids:
+holiday: 0
+monthly: 1
+misc: 2
+achievement: 3
+exclusive: 5
