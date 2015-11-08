@@ -1,4 +1,13 @@
+#all names and descriptions support color codes. (use &<code>) (types do not support color codes)
 award:
+ #award id (use format 'award:name')
+   #name: the name you want to be displayed on the item
+   #type: displays in lore as "Level <level> <type>"
+   #display: the bukkit item id.
+   #description:
+     #- extra lore
+     #- can be multilined and color coded
+     #- use yaml listing
   award:developer:
     name: The Developer Award
     type: piece of paper
