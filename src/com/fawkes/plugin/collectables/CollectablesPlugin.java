@@ -42,7 +42,7 @@ public class CollectablesPlugin extends JavaPlugin {
 		saveDefaultConfig();
 		config = getConfig();
 
-		/* Load award yaml */
+		/* Load award yaml from url */
 		try {
 
 			URL website = new URL(config.getString("awardfile"));
