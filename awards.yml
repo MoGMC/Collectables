@@ -25,7 +25,7 @@ award:
   2:
     name: '&r&lA Special Cookie'
     type: 'holiday cookie'
-    display: COOKIE
+    display: 'COOKIE'
     category: 0
     description:
       - '&6&oA tasty treat to eat'
