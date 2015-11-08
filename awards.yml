@@ -4,6 +4,7 @@ award:
    #name: the name you want to be displayed on the item
    #type: displays in lore as "Level <level> <type>"
    #display: the bukkit item id.
+   #category: holiday, monthly, misc, achievement, exclusive
    #description:
      #- extra lore
      #- can be multilined and color coded
@@ -12,12 +13,14 @@ award:
     name: The Developer Award
     type: piece of paper
     display: PAPER
+    category: exclusive
     description:
       - A reward given to developers
   award:winter2015:
     name: '&r&lA Special Cookie'
     type: holiday cookie
     display: COOKIE
+    category: holiday
     description:
       - '&6&oA tasty treat to eat'
       - '&6Thanks for joining us winter 2015!'
