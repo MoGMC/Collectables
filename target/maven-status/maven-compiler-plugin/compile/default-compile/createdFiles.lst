@@ -1,2 +1,3 @@
-com/fawkes/plugin/collectables/Util.class
+com/fawkes/plugin/collectables/Award.class
+com/fawkes/plugin/collectables/Database.class
 com/fawkes/plugin/collectables/CollectablesPlugin.class

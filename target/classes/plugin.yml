@@ -1,10 +1,10 @@
 name: Collectables
 main: com.fawkes.plugin.collectables.CollectablesPlugin
-version: 0.1-SNAPSHOT
+version: one
 commands:
   showcase:
     description: See all of your collectables!
-    usage: /slap <player>
-    permission: projectfun.slap
+    usage: /showcase [player]
+    permission: collectables.showcase
     aliases: [awards]
     permission-message: You don't have permission to do that!

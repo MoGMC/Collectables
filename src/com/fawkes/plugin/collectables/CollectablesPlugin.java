@@ -154,6 +154,8 @@ public class CollectablesPlugin extends JavaPlugin {
 
 			String rootAward = "award." + a.getId();
 
+			Bukkit.getLogger().info(rootAward);
+
 			// create the actual award to display TODO: maybe add level
 			// indicator as quantity in stack?
 			ItemStack award = new ItemStack(Material.getMaterial(awards.getString(rootAward + ".display")), 1);
