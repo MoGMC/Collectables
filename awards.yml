@@ -9,14 +9,14 @@ award:
      #- extra lore
      #- can be multilined and color coded
      #- use yaml listing
-  award:developer:
+  1:
     name: The Developer Award
     type: piece of paper
     display: PAPER
     category: exclusive
     description:
       - A reward given to developers
-  award:winter2015:
+  2:
     name: '&r&lA Special Cookie'
     type: holiday cookie
     display: COOKIE
@@ -24,7 +24,7 @@ award:
     description:
       - '&6&oA tasty treat to eat'
       - '&6Thanks for joining us winter 2015!'
-  award:testaward:
+  3:
     name: '&r&lA TEST AWARD'
     display: COOKIE
     description:
