@@ -5,8 +5,10 @@
 #misc: 2
 #achievement: 3
 #exclusive: 4
-award:
- #award id (use format 'award:name')
+#
+#example:
+#under 'award'
+#award id (use format 'award:name')
    #name: the name you want to be displayed on the item
    #type: displays in lore as "Level <level> <type>"
    #display: the bukkit item id.
@@ -15,6 +17,7 @@ award:
      #- extra lore
      #- can be multilined and color coded
      #- use yaml listing
+award:
   1:
     name: 'The Developer Award'
     type: 'piece of paper'
