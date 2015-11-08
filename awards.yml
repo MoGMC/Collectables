@@ -1,4 +1,10 @@
 #all names and descriptions support color codes. (use &<code>) (types do not support color codes)
+#Category ids:
+#holiday: 0
+#monthly: 1
+#misc: 2
+#achievement: 3
+#exclusive: 4
 award:
  #award id (use format 'award:name')
    #name: the name you want to be displayed on the item
@@ -10,23 +16,23 @@ award:
      #- can be multilined and color coded
      #- use yaml listing
   1:
-    name: The Developer Award
-    type: piece of paper
-    display: PAPER
-    category: exclusive
+    name: 'The Developer Award'
+    type: 'piece of paper'
+    display: 'PAPER'
+    category: 4
     description:
-      - A reward given to developers
+      - 'A reward given to developers'
   2:
     name: '&r&lA Special Cookie'
-    type: holiday cookie
+    type: 'holiday cookie'
     display: COOKIE
-    category: holiday
+    category: 0
     description:
       - '&6&oA tasty treat to eat'
       - '&6Thanks for joining us winter 2015!'
   3:
     name: '&r&lA TEST AWARD'
-    display: COOKIE
+    display: 'COOKIE'
     description:
       - '&6&oA tasty treat to eat'
       - '&6Thanks for joining us winter 2015!'
