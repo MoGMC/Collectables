@@ -81,6 +81,10 @@ public class Menu {
 		
 		for (Award award: awardsToConvert) {
 			
+			if (!award.getCategory().equals(category)) {
+				continue;
+			}
+			
 			ItemStack item = createItem(Material.getMaterial(award.getMaterial()), award.getName(), award.getDescription(), Long.toString(award.getDate()), false);		
 			items.add(item);
 			
