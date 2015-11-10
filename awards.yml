@@ -9,14 +9,14 @@
 #example:
 #under 'award'
 #award id (use format 'award:name')
-   #name: the name you want to be displayed on the item
-   #type: displays in lore as "Level <level> <type>"
-   #display: the bukkit item id.
-   #category: holiday, monthly, misc, achievement, exclusive
-   #description:
-     #- extra lore
-     #- can be multilined and color coded
-     #- use yaml listing
+#name: the name you want to be displayed on the item
+#type: displays in lore as "Level <level> <type>"
+#display: the bukkit item id.
+#category: holiday, monthly, misc, achievement, exclusive
+#description:
+#- extra lore
+#- can be multilined and color coded
+#- use yaml listing
 award:
   1:
     name: 'The Developer Award'
@@ -39,3 +39,9 @@ award:
     description:
       - '&6&oA tasty treat to eat'
       - '&6Thanks for joining us winter 2015!'
+  4:
+    name: '&rNew Player Award'
+    display: 'NETHER_STAR'
+    category: 3
+    description:
+      - 'Thanks for joining us!'
