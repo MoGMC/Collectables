@@ -54,6 +54,9 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		}
 
+		// register Listeners
+		Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
+
 		// register this as an api for bukkit
 		this.getServer().getServicesManager().register(CollectablesPlugin.class, this, this, ServicePriority.Normal);
 
@@ -75,6 +78,8 @@ public class CollectablesPlugin extends JavaPlugin {
 
 			Player player = (Player) sender;
 
+			Player target = player;
+
 			// looking at other people's things
 			if (args.length != 0) {
 
@@ -85,55 +90,37 @@ public class CollectablesPlugin extends JavaPlugin {
 					return true;
 				}
 
-				player.openInventory(getShowcase(splayer));
-
-				return true;
+				target = splayer;
 
 			}
 
-			player.openInventory(getShowcase(player));
+			List<QueryAward> awardsList = null;
+
+			try {
+				awardsList = db.queryShowcase(target.getUniqueId());
+
+			} catch (SQLException e) {
+				player.sendMessage(ChatColor.DARK_RED
+						+ "Database error while running getShowcase. Please report on the forums along with the following number: "
+						+ System.currentTimeMillis());
+				e.printStackTrace();
+
+			}
+
+			Menu menu = new Menu(target.getName(), awardsList);
+
+			// register the new open menu under the player who is OPENING it.
+			// (not the target!)
+
+			MenuFactory.registerOpenMenu(player.getUniqueId(), menu);
+
+			player.openInventory(menu.getMain());
 
 			return true;
 
 		}
 
 		return false;
-
-	}
-
-	public Inventory getShowcase(Player player) {
-
-		Inventory showcase = Bukkit.createInventory(null, showcaseSize, player.getDisplayName() + "'s showcase");
-
-		// query database
-		List<QueryAward> awardslist;
-
-		try {
-			awardslist = db.queryShowcase(player.getUniqueId());
-
-		} catch (SQLException e) {
-			player.sendMessage(ChatColor.DARK_RED
-					+ "Database error while running getShowcase. Please report on the forums along with the following number: "
-					+ System.currentTimeMillis());
-			e.printStackTrace();
-
-			return showcase;
-
-		}
-
-		// if player doesn't have any awards, return empty inventory.
-		if (awardslist.isEmpty()) {
-			return showcase;
-		}
-
-		// loop thru all awards and set em up
-		for (QueryAward a : awardslist) {
-
-			showcase.addItem(af.getFormattedAward(a, player.getName()));
-
-		}
-
-		return showcase;
 
 	}
 

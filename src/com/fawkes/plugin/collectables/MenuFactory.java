@@ -3,7 +3,9 @@ package com.fawkes.plugin.collectables;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,6 +16,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class MenuFactory {
+
+	private static HashMap<UUID, Menu> openInventories = new HashMap<UUID, Menu>();
 
 	public static Inventory createMainMenu(List<QueryAward> awards) {
 
@@ -77,6 +81,19 @@ public class MenuFactory {
 
 	}
 
+	public static Inventory createShowcase(String title, String playerName, List<QueryAward> awards) {
+
+		Inventory inv = Bukkit.createInventory(null, 18, title);
+
+		for (QueryAward a : awards) {
+			inv.addItem(AwardFactory.getFormattedAward(a, playerName));
+
+		}
+
+		return inv;
+
+	}
+
 	// TODO: should we really do this every time?
 	public static ItemStack backButton() {
 
@@ -91,6 +108,31 @@ public class MenuFactory {
 		button.setItemMeta(meta);
 
 		return button;
+
+	}
+
+	/*
+	 * Cloud storage for open inventories or something
+	 * 
+	 */
+
+	public static void registerOpenMenu(UUID uuid, Menu menu) {
+		openInventories.put(uuid, menu);
+
+	}
+
+	public static Menu getOpenMenu(UUID uuid) {
+		return openInventories.get(uuid);
+
+	}
+
+	public static void removeOpenMenu(UUID uuid) {
+		openInventories.remove(uuid);
+
+	}
+
+	public static boolean hasMenuOpen(UUID uuid) {
+		return openInventories.containsKey(uuid);
 
 	}
 
