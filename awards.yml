@@ -17,31 +17,31 @@
 #- extra lore
 #- can be multilined and color coded
 #- use yaml listing
-award:
-  1:
-    name: 'The Developer Award'
-    type: 'piece of paper'
-    display: 'PAPER'
-    category: 4
-    description:
-      - 'A reward given to developers'
-  2:
-    name: '&r&lA Special Cookie'
-    type: 'holiday cookie'
-    display: 'COOKIE'
-    category: 0
-    description:
-      - '&6&oA tasty treat to eat'
-      - '&6Thanks for joining us winter 2015!'
-  3:
-    name: '&r&lA TEST AWARD'
-    display: 'COOKIE'
-    description:
-      - '&6&oA tasty treat to eat'
-      - '&6Thanks for joining us winter 2015!'
-  4:
-    name: '&rNew Player Award'
-    display: 'NETHER_STAR'
-    category: 3
-    description:
-      - 'Thanks for joining us!'
+developer:
+  name: 'The Developer Award'
+  type: 'piece of paper'
+  display: 'PAPER'
+  category: misc
+  description:
+    - 'A reward given to developers'
+cookie:
+  name: '&r&lA Special Cookie'
+  type: 'holiday cookie'
+  display: 'COOKIE'
+  category: holiday
+  description:
+    - '&6&oA tasty treat to eat'
+    - '&6Thanks for joining us winter 2015!'
+test:
+  name: '&r&lA TEST AWARD'
+  display: 'COOKIE'
+  category: misc
+  description:
+    - '&6&oA tasty treat to eat'
+    - '&6Thanks for joining us winter 2015!'
+newplayer:
+  name: '&rNew Player Award'
+  display: 'NETHER_STAR'
+  category: achievement
+  description:
+    - 'Thanks for joining us!'

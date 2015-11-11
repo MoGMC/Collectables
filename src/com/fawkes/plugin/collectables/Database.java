@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -20,7 +21,7 @@ public class Database {
 
 	}
 
-	public boolean setLevel(UUID uuid, short awardId, int level) throws SQLException {
+	public boolean setLevel(UUID uuid, String awardId, int level) throws SQLException {
 
 		// prepares the SQL statement
 		PreparedStatement ps = connection
@@ -29,14 +30,14 @@ public class Database {
 		// replaces the ?s in the prepared statement with variables
 		ps.setInt(1, level);
 		ps.setObject(2, uuid.toString());
-		ps.setShort(3, awardId);
+		ps.setString(3, awardId);
 
 		// execute the SQL statement and return if it was successful.
 		return ps.execute();
 
 	}
 
-	public boolean doesExist(UUID uuid, short awardId) {
+	public boolean doesExist(UUID uuid, String awardId) {
 
 		try {
 
@@ -49,7 +50,7 @@ public class Database {
 
 			// replaces the ?s in the prepared statement with variables
 			ps.setObject(1, uuid.toString());
-			ps.setShort(2, awardId);
+			ps.setString(2, awardId);
 
 			/*
 			 * execute the SQL statement and return if it was successful (if
@@ -66,7 +67,7 @@ public class Database {
 
 	}
 
-	public boolean giveAward(UUID uuid, short awardId, long date, int level) throws SQLException {
+	public boolean giveAward(UUID uuid, String awardId, long date, int level) throws SQLException {
 
 		// prepare the SQL statement
 		// basically just adds a new row into the table
@@ -75,7 +76,7 @@ public class Database {
 
 		// insert the variables in place of the ?s
 		ps.setObject(1, uuid.toString());
-		ps.setShort(2, awardId);
+		ps.setString(2, awardId);
 		ps.setLong(3, date);
 		ps.setInt(4, level);
 
@@ -84,10 +85,10 @@ public class Database {
 
 	}
 
-	public ArrayList<Award> queryShowcase(UUID uuid) throws SQLException {
+	public List<QueryAward> queryShowcase(UUID uuid) throws SQLException {
 
 		// make the list we'll add the award variables to
-		ArrayList<Award> awards = new ArrayList<Award>();
+		ArrayList<QueryAward> awards = new ArrayList<QueryAward>();
 
 		// query the database
 		PreparedStatement ps = connection.prepareStatement("SELECT * FROM playerawards WHERE UUID=?");
@@ -100,7 +101,7 @@ public class Database {
 
 		// loop through the results and turn them into awards
 		while (rs.next()) {
-			awards.add(new Award(rs.getShort("awardid"), rs.getLong("date"), rs.getInt("level")));
+			awards.add(new QueryAward(rs.getString("awardid"), rs.getLong("date"), rs.getInt("level")));
 
 		}
 

@@ -1,28 +1,17 @@
 package com.fawkes.plugin.collectables;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,33 +21,20 @@ public class CollectablesPlugin extends JavaPlugin {
 	private static FileConfiguration config;
 	private static final int showcaseSize = 18;
 
-	// private final File awards = new File("awards.yml");
-	private static YamlConfiguration awards = null;
-
 	private Database db;
+	AwardFactory af;
 
 	@Override
 	public void onEnable() {
 		saveDefaultConfig();
 		config = getConfig();
 
-		/* Load award yaml from url */
+		// Set up the little awards database
 		try {
-
-			URL website = new URL(config.getString("awardfile"));
-
-			ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-
-			File file = new File("awards.yml");
-
-			@SuppressWarnings("resource")
-			FileOutputStream fos = new FileOutputStream(file);
-
-			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-
-			awards = YamlConfiguration.loadConfiguration(file);
+			af = new AwardFactory(config.getString("awardfile"));
 
 		} catch (IOException e) {
+
 			Bukkit.getLogger().severe("Failed to fetch awards.yml, disabling.");
 			e.printStackTrace();
 			Bukkit.getPluginManager().disablePlugin(this);
@@ -130,7 +106,8 @@ public class CollectablesPlugin extends JavaPlugin {
 		Inventory showcase = Bukkit.createInventory(null, showcaseSize, player.getDisplayName() + "'s showcase");
 
 		// query database
-		ArrayList<Award> awardslist;
+		List<QueryAward> awardslist;
+
 		try {
 			awardslist = db.queryShowcase(player.getUniqueId());
 
@@ -150,45 +127,9 @@ public class CollectablesPlugin extends JavaPlugin {
 		}
 
 		// loop thru all awards and set em up
-		for (Award a : awardslist) {
+		for (QueryAward a : awardslist) {
 
-			String rootAward = "award." + a.getId();
-
-			Bukkit.getLogger().info(rootAward);
-
-			// create the actual award to display TODO: maybe add level
-			// indicator as quantity in stack?
-			ItemStack award = new ItemStack(Material.getMaterial(awards.getString(rootAward + ".display")), 1);
-
-			// get item meta to modify
-			ItemMeta meta = award.getItemMeta();
-
-			// set name to award's name in config
-			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', awards.getString(rootAward + ".name")));
-
-			// get item description
-			List<String> description = awards.getStringList(rootAward + ".description");
-
-			// add color codes to all the lines of the description
-			for (int line = 0; line < description.size(); line++) {
-				description.set(line, ChatColor.translateAlternateColorCodes('&', description.get(line)));
-
-			}
-
-			// add "level X item" branding
-			description.add(0, "");
-			description.add(0, ChatColor.GRAY + "Level " + a.getLevel() + " " + awards.getString(rootAward + ".type"));
-
-			// add "granted to PLAYER on DATE"
-			description.add("");
-			description.add(ChatColor.GRAY + "Granted to " + player.getName() + " on " + new Date(a.date).toString());
-
-			// set lore to description in config
-			meta.setLore(description);
-
-			award.setItemMeta(meta);
-
-			showcase.addItem(award);
+			showcase.addItem(af.getFormattedAward(a, player.getName()));
 
 		}
 
@@ -209,19 +150,19 @@ public class CollectablesPlugin extends JavaPlugin {
 	}
 
 	// might throw an error
-	public boolean hasAward(UUID uuid, short awardId) {
+	public boolean hasAward(UUID uuid, String awardId) {
 		return db.doesExist(uuid, awardId);
 
 	}
 
 	// assuming you did all the checks before
-	public void setLevel(UUID uuid, short awardId, int level) throws SQLException {
+	public void setLevel(UUID uuid, String awardId, int level) throws SQLException {
 		db.setLevel(uuid, awardId, level);
 
 	}
 
 	// assuming you did all the checks before
-	public void giveAward(UUID uuid, short awardId, int baseLevel) throws SQLException {
+	public void giveAward(UUID uuid, String awardId, int baseLevel) throws SQLException {
 		db.giveAward(uuid, awardId, System.currentTimeMillis(), baseLevel);
 
 	}
