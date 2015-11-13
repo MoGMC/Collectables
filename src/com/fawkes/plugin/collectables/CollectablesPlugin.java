@@ -20,12 +20,15 @@ public class CollectablesPlugin extends JavaPlugin {
 
 	private static FileConfiguration config;
 	private static final int showcaseSize = 18;
+	private static CollectablesPlugin plugin;
 
 	private Database db;
 	AwardFactory af;
 
 	@Override
 	public void onEnable() {
+		this.plugin = this;
+		
 		saveDefaultConfig();
 		config = getConfig();
 
@@ -95,17 +98,8 @@ public class CollectablesPlugin extends JavaPlugin {
 			}
 
 			List<QueryAward> awardsList = null;
-
-			try {
-				awardsList = db.queryShowcase(target.getUniqueId());
-
-			} catch (SQLException e) {
-				player.sendMessage(ChatColor.DARK_RED
-						+ "Database error while running getShowcase. Please report on the forums along with the following number: "
-						+ System.currentTimeMillis());
-				e.printStackTrace();
-
-			}
+			
+			awardsList = getAwards(target.getUniqueId(), player);
 
 			Menu menu = new Menu(target.getName(), awardsList);
 
@@ -123,12 +117,32 @@ public class CollectablesPlugin extends JavaPlugin {
 		return false;
 
 	}
+	
+	public static CollectablesPlugin getPlugin() {
+		return plugin;
+	}
 
 	/* API methods */
 
 	public boolean awardExists(String awardID) {
 		return config.contains("award." + awardID);
 
+	}
+	
+	public List<QueryAward> getAwards(UUID uuid, Player asker) {
+		List<QueryAward> awardsList = null;
+		
+		try {
+			awardsList = db.queryShowcase(uuid);
+
+		} catch (SQLException e) {
+			asker.sendMessage(ChatColor.DARK_RED
+					+ "Database error while running getShowcase. Please report on the forums along with the following number: "
+					+ System.currentTimeMillis());
+			e.printStackTrace();
+		}
+		
+		return awardsList;
 	}
 
 	public boolean doesExist(String path) {
