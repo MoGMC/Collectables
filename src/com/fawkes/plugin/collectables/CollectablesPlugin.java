@@ -250,10 +250,7 @@ public class CollectablesPlugin extends JavaPlugin {
 	// assuming you did all the checks before
 	public void giveAward(UUID uuid, String awardId, int baseLevel) throws SQLException {
 
-		if (!db.giveAward(uuid, awardId, System.currentTimeMillis(), baseLevel)) {
-			return;
-
-		}
+		db.giveAward(uuid, awardId, System.currentTimeMillis(), baseLevel);
 
 		// wowo alert!
 
