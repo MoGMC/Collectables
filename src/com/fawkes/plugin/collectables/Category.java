@@ -7,7 +7,7 @@ import org.bukkit.Material;
 
 public enum Category {
 
-	MAIN("main menu"), HOLIDAY("holiday"), MONTHLY("monthly"), MISC("miscellaneous"), ACHIEVEMENT(
+	MAIN("main menu"), HOLIDAY("holiday"), MONTHLY("monthly"), MISC("misc"), ACHIEVEMENT(
 			"achievement"), EXCLUSIVE("exclusive");
 
 	String string;

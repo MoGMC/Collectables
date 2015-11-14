@@ -8,3 +8,13 @@ commands:
     permission: collectables.showcase
     aliases: [awards]
     permission-message: You don't have permission to do that!
+  giveaward:
+    description: Give a player an award.
+    usage: /giveaward <player> <award id> <award level>
+    permission: collectables.giveaward
+    permission-message: You don't have permission to do that!
+  removeaward:
+    description: Take an award from a player. (irreversible)
+    usage: /giveaward <player> <award id>
+    permission: collectables.removeaward
+    permission-message: You don't have permission to do that!

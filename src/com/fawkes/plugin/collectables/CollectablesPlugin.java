@@ -147,7 +147,8 @@ public class CollectablesPlugin extends JavaPlugin {
 			}
 
 			try {
-				db.giveAward(p.getUniqueId(), args[1], System.currentTimeMillis(), level);
+				sender.sendMessage(
+						"Query returned: " + db.giveAward(p.getUniqueId(), args[1], System.currentTimeMillis(), level));
 
 			} catch (SQLException e) {
 				sender.sendMessage("Could not award player. SQL error at time: " + System.currentTimeMillis());
@@ -182,7 +183,7 @@ public class CollectablesPlugin extends JavaPlugin {
 			}
 
 			try {
-				db.removeAward(p.getUniqueId(), args[1]);
+				sender.sendMessage("Query returned: " + db.removeAward(p.getUniqueId(), args[1]));
 
 			} catch (SQLException e) {
 				sender.sendMessage(
@@ -190,6 +191,8 @@ public class CollectablesPlugin extends JavaPlugin {
 				e.printStackTrace();
 
 			}
+
+			return true;
 
 		}
 
@@ -246,6 +249,7 @@ public class CollectablesPlugin extends JavaPlugin {
 
 	// assuming you did all the checks before
 	public void giveAward(UUID uuid, String awardId, int baseLevel) throws SQLException {
+
 		if (!db.giveAward(uuid, awardId, System.currentTimeMillis(), baseLevel)) {
 			return;
 

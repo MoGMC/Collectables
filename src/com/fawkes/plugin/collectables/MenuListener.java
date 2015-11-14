@@ -50,12 +50,12 @@ public class MenuListener implements Listener {
 		 * }
 		 */
 
+		if (itemClicked.getType().equals(Material.AIR)) {
+			return;
+
+		}
+
 		if (e.getInventory().getName().equals("main menu")) {
-
-			if (itemClicked.getType().equals(Material.AIR)) {
-				return;
-
-			}
 
 			changeMenu(Category.getCategory(itemClicked.getType()), player);
 
