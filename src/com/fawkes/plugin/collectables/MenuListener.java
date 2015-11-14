@@ -55,7 +55,7 @@ public class MenuListener implements Listener {
 
 		}
 
-		if (e.getInventory().getName().equals("main menu")) {
+		if (e.getInventory().getName().equals("Main Menu")) {
 
 			changeMenu(Category.getCategory(itemClicked.getType()), player);
 
@@ -84,13 +84,16 @@ public class MenuListener implements Listener {
 
 		if (e.getPlayer() instanceof Player == false) {
 			return;
+
 		}
 
 		if (!MenuFactory.hasMenuOpen(e.getPlayer().getUniqueId())) {
 			return;
+
 		}
 
 		MenuFactory.removeOpenMenu(e.getPlayer().getUniqueId());
+
 	}
 
 	// TODO: elminate any static plugin things
@@ -106,13 +109,10 @@ public class MenuListener implements Listener {
 			@Override
 			public void run() {
 
-				player.closeInventory();
-
 				// Not sure if InventoryCloseEvent will trigger and remove the
 				// open menu before the code below happens, hope it does
 
-				Menu menu = new Menu(player.getName(),
-						CollectablesPlugin.getPlugin().getAwards(player.getUniqueId(), player));
+				Menu menu = MenuFactory.getOpenMenu(player.getUniqueId());
 
 				if (newCategory.equals(Category.MAIN)) {
 					player.openInventory(menu.getMain());

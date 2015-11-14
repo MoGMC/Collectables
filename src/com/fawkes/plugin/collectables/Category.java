@@ -7,9 +7,9 @@ import org.bukkit.Material;
 
 public enum Category {
 
-	MAIN("main menu", Material.POISONOUS_POTATO), HOLIDAY("holiday", Material.SAPLING), MONTHLY("monthly",
-			Material.PAPER), MISC("misc", Material.SLIME_BALL), ACHIEVEMENT("achievement",
-					Material.STICK), EXCLUSIVE("exclusive", Material.GOLD_INGOT);
+	MAIN("Main Menu", Material.POISONOUS_POTATO), HOLIDAY("Holiday", Material.SAPLING), MONTHLY("Monthly",
+			Material.PAPER), MISC("Misc", Material.SLIME_BALL), ACHIEVEMENT("Achievement",
+					Material.STICK), EXCLUSIVE("Exclusive", Material.GOLD_INGOT);
 
 	String string;
 	Material material;

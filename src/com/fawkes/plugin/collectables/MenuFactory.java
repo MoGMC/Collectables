@@ -19,14 +19,22 @@ public class MenuFactory {
 
 	private static HashMap<UUID, Menu> openInventories = new HashMap<UUID, Menu>();
 
-	public static String BACK = ChatColor.RESET + "back";
+	public static String BACK = ChatColor.RESET + "Back";
 
 	public static Inventory createMainMenu(List<QueryAward> awards) {
 
-		Inventory inv = Bukkit.createInventory(null, 27, "main menu");
+		Inventory inv = Bukkit.createInventory(null, 36, "Main Menu");
 
 		// if awards are null, return empty inventory.
 		if (awards.isEmpty()) {
+			ItemStack nothing = new ItemStack(Material.POTATO, 1);
+
+			ItemMeta nmeta = nothing.getItemMeta();
+			nmeta.setDisplayName(ChatColor.RESET + "Nothing Here.");
+			nothing.setItemMeta(nmeta);
+
+			inv.setItem(13, nothing);
+
 			return inv;
 
 		}
@@ -53,7 +61,7 @@ public class MenuFactory {
 
 			// set button name and misc
 			ItemMeta meta = button.getItemMeta();
-			meta.setDisplayName(ChatColor.RESET + c.toString() + " awards");
+			meta.setDisplayName(ChatColor.RESET + c.toString() + " Awards");
 
 			button.setItemMeta(meta);
 
@@ -80,7 +88,7 @@ public class MenuFactory {
 			}
 		}
 
-		return createItemInventory(playerName + "'s " + category.toString() + " awards", playerName, desiredAwards);
+		return createItemInventory(playerName + "'s " + category.toString() + " Awards", playerName, desiredAwards);
 
 	}
 
@@ -127,7 +135,7 @@ public class MenuFactory {
 
 		meta.setDisplayName(BACK);
 
-		meta.setLore(Arrays.asList(ChatColor.RED + "click to go back"));
+		meta.setLore(Arrays.asList(ChatColor.RED + "Click to go back"));
 
 		button.setItemMeta(meta);
 
@@ -141,7 +149,7 @@ public class MenuFactory {
 	 */
 
 	public static void registerOpenMenu(UUID uuid, Menu menu) {
-		openInventories.put(uuid, menu);
+		Bukkit.getLogger().info("Registered a menu");
 
 	}
 

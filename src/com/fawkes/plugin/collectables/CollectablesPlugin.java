@@ -78,36 +78,38 @@ public class CollectablesPlugin extends JavaPlugin {
 
 			}
 
-			Player player = (Player) sender;
-
-			Player target = player;
+			String name = sender.getName();
+			UUID uuid = ((Player) sender).getUniqueId();
+			UUID origUuid = uuid;
 
 			// looking at other people's things
 			if (args.length != 0) {
 
-				Player splayer = (Player) Bukkit.getOfflinePlayer(args[0]);
+				OfflinePlayer splayer = Bukkit.getOfflinePlayer(args[0]);
 
 				if (splayer == null) {
 					sender.sendMessage(ChatColor.DARK_RED + "Could not find player \"" + args[0] + "\"");
 					return true;
+
 				}
 
-				target = splayer;
+				name = splayer.getName();
+				uuid = splayer.getUniqueId();
 
 			}
 
 			List<QueryAward> awardsList = null;
 
-			awardsList = getAwards(target.getUniqueId(), player);
+			awardsList = getAwards(uuid, sender);
 
-			Menu menu = new Menu(target.getName(), awardsList);
+			Menu menu = new Menu(name, awardsList);
 
 			// register the new open menu under the player who is OPENING it.
 			// (not the target!)
 
-			MenuFactory.registerOpenMenu(player.getUniqueId(), menu);
+			MenuFactory.registerOpenMenu(origUuid, menu);
 
-			player.openInventory(menu.getMain());
+			((Player) sender).openInventory(menu.getMain());
 
 			return true;
 
@@ -213,14 +215,14 @@ public class CollectablesPlugin extends JavaPlugin {
 
 	}
 
-	public List<QueryAward> getAwards(UUID uuid, Player asker) {
+	public List<QueryAward> getAwards(UUID uuid, CommandSender sender) {
 		List<QueryAward> awardsList = null;
 
 		try {
 			awardsList = db.queryShowcase(uuid);
 
 		} catch (SQLException e) {
-			asker.sendMessage(ChatColor.DARK_RED
+			sender.sendMessage(ChatColor.DARK_RED
 					+ "Database error while running getShowcase. Please report on the forums along with the following number: "
 					+ System.currentTimeMillis());
 			e.printStackTrace();
@@ -261,7 +263,7 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		}
 
-		p.sendMessage(ChatColor.GOLD + " You have received the award: "
+		p.sendMessage(ChatColor.GOLD + "You have received the award: "
 				+ ChatColor.translateAlternateColorCodes('&', AwardFactory.getName(awardId)) + ChatColor.GOLD
 				+ ". Type /showcase to view your awards!");
 
