@@ -89,6 +89,16 @@ public class AwardFactory {
 
 	}
 
+	public static String getName(String awardid) {
+		return awards.getString(awardid + ".name");
+
+	}
+
+	public static boolean exists(String path) {
+		return awards.contains(path);
+
+	}
+
 	public static List<Category> getCategories(List<QueryAward> awards) {
 		ArrayList<Category> categories = new ArrayList<Category>();
 

@@ -46,3 +46,10 @@ newplayer:
   category: achievement
   description:
     - 'Thanks for joining us!'
+2015november:
+  name: 'November Award!'
+  type: 'turkey'
+  display: 'COOKED_CHICKEN'
+  category: monthly
+  description:
+    - 'Thanks for joining us for November 2015!'

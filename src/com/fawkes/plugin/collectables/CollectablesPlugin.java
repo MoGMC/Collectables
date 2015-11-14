@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,7 +19,6 @@ public class CollectablesPlugin extends JavaPlugin {
 	// only allow player that was given key/crate to use it
 
 	private static FileConfiguration config;
-	private static final int showcaseSize = 18;
 	private static CollectablesPlugin plugin;
 
 	private Database db;
@@ -67,7 +67,7 @@ public class CollectablesPlugin extends JavaPlugin {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-		String cmd = command.getName();
+		String cmd = command.getName().toLowerCase();
 
 		if (cmd.equalsIgnoreCase("showcase")) {
 			// display showcase
@@ -113,6 +113,86 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		}
 
+		if (cmd.equals("giveaward")) {
+
+			if (args.length != 3) {
+				sender.sendMessage("/giveaward <player name> <award> <level>");
+				return true;
+
+			}
+
+			if (!AwardFactory.exists(args[1])) {
+				sender.sendMessage("No such award: " + args[1]);
+				return true;
+
+			}
+
+			int level;
+
+			try {
+				level = Integer.valueOf(args[2]);
+
+			} catch (NumberFormatException e) {
+				sender.sendMessage("No such number: " + args[2]);
+				return true;
+
+			}
+
+			OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
+
+			if (p == null) {
+				sender.sendMessage("No such player: " + args[0]);
+				return true;
+
+			}
+
+			try {
+				db.giveAward(p.getUniqueId(), args[1], System.currentTimeMillis(), level);
+
+			} catch (SQLException e) {
+				sender.sendMessage("Could not award player. SQL error at time: " + System.currentTimeMillis());
+				e.printStackTrace();
+
+			}
+
+			return true;
+
+		}
+
+		if (cmd.equals("removeaward")) {
+
+			if (args.length != 2) {
+				sender.sendMessage("/removeaward <player name> <award>");
+				return true;
+
+			}
+
+			if (!AwardFactory.exists(args[1])) {
+				sender.sendMessage("No such award: " + args[1]);
+				return true;
+
+			}
+
+			OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
+
+			if (p == null) {
+				sender.sendMessage("No such player: " + args[0]);
+				return true;
+
+			}
+
+			try {
+				db.removeAward(p.getUniqueId(), args[1]);
+
+			} catch (SQLException e) {
+				sender.sendMessage(
+						"Could not remove award from player. SQL error at time: " + System.currentTimeMillis());
+				e.printStackTrace();
+
+			}
+
+		}
+
 		return false;
 
 	}
@@ -144,6 +224,7 @@ public class CollectablesPlugin extends JavaPlugin {
 		}
 
 		return awardsList;
+
 	}
 
 	public boolean doesExist(String path) {
@@ -165,7 +246,29 @@ public class CollectablesPlugin extends JavaPlugin {
 
 	// assuming you did all the checks before
 	public void giveAward(UUID uuid, String awardId, int baseLevel) throws SQLException {
-		db.giveAward(uuid, awardId, System.currentTimeMillis(), baseLevel);
+		if (!db.giveAward(uuid, awardId, System.currentTimeMillis(), baseLevel)) {
+			return;
+
+		}
+
+		// wowo alert!
+
+		Player p = Bukkit.getPlayer(uuid);
+
+		if (p == null) {
+			return;
+
+		}
+
+		p.sendMessage(ChatColor.GOLD + " You have received the award: "
+				+ ChatColor.translateAlternateColorCodes('&', AwardFactory.getName(awardId)) + ChatColor.GOLD
+				+ ". Type /showcase to view your awards!");
+
+	}
+
+	// assuming you did checks before?
+	public void removeAward(UUID uuid, String awardId) throws SQLException {
+		db.removeAward(uuid, awardId);
 
 	}
 

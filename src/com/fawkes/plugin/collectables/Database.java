@@ -85,6 +85,21 @@ public class Database {
 
 	}
 
+	public boolean removeAward(UUID uuid, String awardId) throws SQLException {
+
+		// prepare the SQL statement
+		// removes all rows with uuid = uuid and awardid = awardId
+		PreparedStatement ps = connection.prepareStatement("DELETE FROM playerawards WHERE uuid=? AND awardid=?");
+
+		// insert the variables in place of the ?s
+		ps.setObject(1, uuid.toString());
+		ps.setString(2, awardId);
+
+		// execute the SQL statement and return if it was successful.
+		return ps.execute();
+
+	}
+
 	public List<QueryAward> queryShowcase(UUID uuid) throws SQLException {
 
 		// make the list we'll add the award variables to
