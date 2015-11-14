@@ -19,6 +19,8 @@ public class MenuFactory {
 
 	private static HashMap<UUID, Menu> openInventories = new HashMap<UUID, Menu>();
 
+	public static String BACK = ChatColor.RESET + "back";
+
 	public static Inventory createMainMenu(List<QueryAward> awards) {
 
 		Inventory inv = Bukkit.createInventory(null, 27, "main menu");
@@ -39,14 +41,24 @@ public class MenuFactory {
 
 			freq = Collections.frequency(categories, c);
 
+			ItemStack button;
+
 			if (freq == 0) {
-				inv.setItem(11 + counter, new ItemStack(Category.getMaterial(c), 1));
-				counter += 1;
-				continue;
+				button = new ItemStack(c.getMaterial(), 1);
+
+			} else {
+				button = new ItemStack(c.getMaterial(), freq);
 
 			}
 
-			inv.setItem(11 + counter, new ItemStack(Category.getMaterial(c), freq));
+			// set button name and misc
+			ItemMeta meta = button.getItemMeta();
+			meta.setDisplayName(ChatColor.RESET + c.toString() + " awards");
+
+			button.setItemMeta(meta);
+
+			inv.setItem(11 + counter, button);
+
 			counter += 1;
 
 		}
@@ -113,9 +125,9 @@ public class MenuFactory {
 
 		ItemMeta meta = button.getItemMeta();
 
-		meta.setDisplayName("back");
+		meta.setDisplayName(BACK);
 
-		meta.setLore(Arrays.asList(ChatColor.RED + "Click to go back"));
+		meta.setLore(Arrays.asList(ChatColor.RED + "click to go back"));
 
 		button.setItemMeta(meta);
 

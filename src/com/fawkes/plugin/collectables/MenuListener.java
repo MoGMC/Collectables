@@ -50,7 +50,7 @@ public class MenuListener implements Listener {
 		 * }
 		 */
 
-		if (itemClicked.getType().equals(Material.AIR)) {
+		if (itemClicked == null || itemClicked.getType().equals(Material.AIR)) {
 			return;
 
 		}
@@ -69,7 +69,7 @@ public class MenuListener implements Listener {
 
 		// Check if back button is pressed to go back to main menu
 		// "back" isnt really going to change
-		if (itemClicked.getItemMeta().getDisplayName().equals("back")) {
+		if (itemClicked.getItemMeta().getDisplayName().equals(MenuFactory.BACK)) {
 			changeMenu(Category.MAIN, player);
 
 		}
