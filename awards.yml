@@ -53,3 +53,11 @@ newplayer:
   category: monthly
   description:
     - 'Thanks for joining us for November 2015!'
+launchaward:
+  name: '&rCollectables Launch Award!'
+  display: DEAD_BUSH
+  type: 'neat object'
+  category: exclusive
+  description:
+    - 'Veteran of Collectables Launch Day.'
+    - 'Thanks for your support!'
