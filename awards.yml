@@ -34,6 +34,7 @@ cookie:
     - '&6Thanks for joining us winter 2015!'
 test:
   name: '&r&lA TEST AWARD'
+  type: 'test award'
   display: 'COOKIE'
   category: misc
   description:
