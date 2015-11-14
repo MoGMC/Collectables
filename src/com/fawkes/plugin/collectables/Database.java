@@ -46,7 +46,7 @@ public class Database {
 			 * selects all of the rows that have both "uuid" equals
 			 * "uuid.toString()" and "awardid" equals "awardId"
 			 */
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM playerawards WHERE uuid=? awardid=?");
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM playerawards WHERE uuid=? AND awardid=?");
 
 			// replaces the ?s in the prepared statement with variables
 			ps.setObject(1, uuid.toString());
@@ -56,7 +56,7 @@ public class Database {
 			 * execute the SQL statement and return if it was successful (if
 			 * there was a result)
 			 */
-			return ps.execute();
+			return ps.executeQuery().next();
 
 		} catch (SQLException e) {
 			Bukkit.getLogger().severe("Error in checking database with doesExist");
