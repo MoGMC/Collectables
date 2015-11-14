@@ -147,8 +147,8 @@ public class CollectablesPlugin extends JavaPlugin {
 			}
 
 			try {
-				sender.sendMessage(
-						"Query returned: " + db.giveAward(p.getUniqueId(), args[1], System.currentTimeMillis(), level));
+				giveAward(p.getUniqueId(), args[1], level);
+				sender.sendMessage("Gave.");
 
 			} catch (SQLException e) {
 				sender.sendMessage("Could not award player. SQL error at time: " + System.currentTimeMillis());
