@@ -85,7 +85,7 @@ public class AwardFactory {
 	}
 
 	public static Category getCategory(String awardid) {
-		return Category.getCategory(awards.getString(awardid));
+		return Category.getCategory(awards.getString(awardid + ".category"));
 
 	}
 

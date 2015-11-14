@@ -1,8 +1,10 @@
 com/fawkes/plugin/collectables/QueryAward.class
-com/fawkes/plugin/collectables/Award.class
 com/fawkes/plugin/collectables/AwardFactory.class
 com/fawkes/plugin/collectables/Category$1.class
 com/fawkes/plugin/collectables/Database.class
 com/fawkes/plugin/collectables/MenuFactory.class
+com/fawkes/plugin/collectables/MenuListener$1.class
+com/fawkes/plugin/collectables/MenuListener.class
 com/fawkes/plugin/collectables/CollectablesPlugin.class
 com/fawkes/plugin/collectables/Category.class
+com/fawkes/plugin/collectables/Menu.class

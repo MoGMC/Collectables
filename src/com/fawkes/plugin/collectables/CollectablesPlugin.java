@@ -11,7 +11,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,7 +27,7 @@ public class CollectablesPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		this.plugin = this;
-		
+
 		saveDefaultConfig();
 		config = getConfig();
 
@@ -98,7 +97,7 @@ public class CollectablesPlugin extends JavaPlugin {
 			}
 
 			List<QueryAward> awardsList = null;
-			
+
 			awardsList = getAwards(target.getUniqueId(), player);
 
 			Menu menu = new Menu(target.getName(), awardsList);
@@ -117,10 +116,12 @@ public class CollectablesPlugin extends JavaPlugin {
 		return false;
 
 	}
-	
+
 	public static CollectablesPlugin getPlugin() {
 		return plugin;
 	}
+
+	/* static methods */
 
 	/* API methods */
 
@@ -128,10 +129,10 @@ public class CollectablesPlugin extends JavaPlugin {
 		return config.contains("award." + awardID);
 
 	}
-	
+
 	public List<QueryAward> getAwards(UUID uuid, Player asker) {
 		List<QueryAward> awardsList = null;
-		
+
 		try {
 			awardsList = db.queryShowcase(uuid);
 
@@ -141,7 +142,7 @@ public class CollectablesPlugin extends JavaPlugin {
 					+ System.currentTimeMillis());
 			e.printStackTrace();
 		}
-		
+
 		return awardsList;
 	}
 

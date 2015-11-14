@@ -23,6 +23,12 @@ public class MenuFactory {
 
 		Inventory inv = Bukkit.createInventory(null, 27, "main menu");
 
+		// if awards are null, return empty inventory.
+		if (awards.isEmpty()) {
+			return inv;
+
+		}
+
 		// count the awards
 		List<Category> categories = AwardFactory.getCategories(awards);
 
@@ -70,12 +76,18 @@ public class MenuFactory {
 
 		Inventory inv = Bukkit.createInventory(null, 27, title);
 
+		inv.setItem(26, backButton());
+
+		// if awards are null, return empty inventory.
+		if (awards.isEmpty()) {
+			return inv;
+
+		}
+
 		for (QueryAward a : awards) {
 			inv.addItem(AwardFactory.getFormattedAward(a, playerName));
 
 		}
-
-		inv.setItem(26, backButton());
 
 		return inv;
 
@@ -101,7 +113,7 @@ public class MenuFactory {
 
 		ItemMeta meta = button.getItemMeta();
 
-		meta.setDisplayName("Back");
+		meta.setDisplayName("back");
 
 		meta.setLore(Arrays.asList(ChatColor.RED + "Click to go back"));
 

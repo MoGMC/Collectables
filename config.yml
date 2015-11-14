@@ -1,4 +1,4 @@
-awardfile: 'https://github.com/seawee65/Collectables/blob/master/awards.yml'
+awardfile: 'https://raw.githubusercontent.com/seawee65/Collectables/master/awards.yml'
 player:
   b834652b-3ed2-4afd-92de-afce4dcf80f1:
     awards:

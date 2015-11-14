@@ -7,17 +7,19 @@ import org.bukkit.Material;
 
 public enum Category {
 
-	MAIN("Main Menu"), HOLIDAY("holiday"), MONTHLY("monthly"), MISC("miscellaneous"), ACHIEVEMENT(
+	MAIN("main menu"), HOLIDAY("holiday"), MONTHLY("monthly"), MISC("miscellaneous"), ACHIEVEMENT(
 			"achievement"), EXCLUSIVE("exclusive");
 
 	String string;
 
 	Category(String string) {
 		this.string = string;
+
 	}
 
-	public String getString() {
+	public String toString() {
 		return string;
+
 	}
 
 	public static Category getCategory(String category) {
@@ -39,6 +41,28 @@ public enum Category {
 
 		default:
 			return null;
+
+		}
+
+	}
+
+	public static Category getCategory(Material material) {
+
+		switch (material) {
+
+		case SAPLING:
+			return HOLIDAY;
+		case PAPER:
+			return MONTHLY;
+		case SLIME_BALL:
+			return MISC;
+		case STICK:
+			return ACHIEVEMENT;
+		case GOLD_INGOT:
+			return EXCLUSIVE;
+
+		default:
+			return MISC;
 
 		}
 
