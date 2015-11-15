@@ -37,6 +37,36 @@ public class Database {
 
 	}
 
+	public boolean clearOfflineAwards(UUID uuid) throws SQLException {
+		// prepares the SQL statement
+		PreparedStatement ps = connection.prepareStatement("DELETE FROM offlineplayers WHERE uuid=?");
+
+		ps.setString(1, uuid.toString());
+
+		return ps.execute();
+
+	}
+
+	public ResultSet getOfflineAwards(UUID uuid) throws SQLException {
+		// prepares the SQL statement
+		PreparedStatement ps = connection.prepareStatement("SELECT * FROM offlineplayers WHERE uuid=?");
+
+		ps.setString(1, uuid.toString());
+
+		return ps.executeQuery();
+
+	}
+
+	public boolean storeOfflineAward(UUID uuid, String awardId) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("INSERT INTO offlineplayers (uuid, awardid) VALUES (?, ?)");
+
+		ps.setString(1, uuid.toString());
+		ps.setString(2, awardId);
+
+		return ps.execute();
+
+	}
+
 	public boolean doesExist(UUID uuid, String awardId) {
 
 		try {

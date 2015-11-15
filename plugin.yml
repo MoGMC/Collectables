@@ -19,3 +19,8 @@ commands:
     usage: /giveaward <player> <award id>
     permission: collectables.removeaward
     permission-message: You don't have permission to do that!
+  listawards:
+    description: List all possible awards.
+    usage: /listawards
+    permission: collectables.listawards
+    permission-message: You don't have permission to do that!

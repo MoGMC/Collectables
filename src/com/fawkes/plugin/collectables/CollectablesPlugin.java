@@ -1,6 +1,7 @@
 package com.fawkes.plugin.collectables;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
@@ -58,6 +59,7 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		// register Listeners
 		Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 
 		// register this as an api for bukkit
 		this.getServer().getServicesManager().register(CollectablesPlugin.class, this, this, ServicePriority.Normal);
@@ -198,6 +200,22 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		}
 
+		if (cmd.equals("listawards")) {
+
+			StringBuilder s = new StringBuilder("List of all awards: ");
+
+			for (String a : AwardFactory.getListOfAwards()) {
+				s.append(a);
+				s.append(" ");
+
+			}
+
+			sender.sendMessage(s.toString());
+
+			return true;
+
+		}
+
 		return false;
 
 	}
@@ -270,22 +288,64 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		// wowo alert!
 
-		Player p = Bukkit.getPlayer(uuid);
+		OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
 
-		if (p == null) {
-			return;
+		// if they're online now, display now. if not, store it away.
+		if (p.isOnline()) {
+			sendAwardMessages(p.getPlayer(), awardId);
+
+		} else {
+			storeOfflineAward(uuid, awardId);
 
 		}
-
-		p.sendMessage(ChatColor.GOLD + "You have received the award: "
-				+ ChatColor.translateAlternateColorCodes('&', AwardFactory.getName(awardId)) + ChatColor.GOLD
-				+ ". Type /showcase to view your awards!");
 
 	}
 
 	// assuming you did checks before?
 	public void removeAward(UUID uuid, String awardId) throws SQLException {
 		db.removeAward(uuid, awardId);
+
+	}
+
+	/* same below about assuming you did checks beforehand. */
+
+	public ResultSet getOfflineAwards(UUID uuid) throws SQLException {
+		return db.getOfflineAwards(uuid);
+
+	}
+
+	public void storeOfflineAward(UUID uuid, String awardId) throws SQLException {
+		db.storeOfflineAward(uuid, awardId);
+
+	}
+
+	public void clearOfflineAwards(UUID uuid) throws SQLException {
+		db.clearOfflineAwards(uuid);
+
+	}
+
+	public void sendAwardMessages(Player p, String awardId) {
+
+		String aname = AwardFactory.getName(awardId);
+
+		StringBuilder s = new StringBuilder(ChatColor.GOLD.toString());
+
+		s.append("You have the received the award: [");
+		s.append(aname);
+		s.append(ChatColor.GOLD.toString());
+		s.append("]! Type /showcase to view all of your awards.");
+
+		p.sendMessage(s.toString());
+
+		StringBuilder s1 = new StringBuilder(ChatColor.GREEN.toString());
+
+		s1.append(p.getDisplayName());
+		s1.append(" has just received the award: [");
+		s1.append(aname);
+		s1.append(ChatColor.GREEN.toString());
+		s1.append("]!");
+
+		Bukkit.broadcastMessage(s1.toString());
 
 	}
 

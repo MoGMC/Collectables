@@ -9,6 +9,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -56,7 +57,7 @@ public class AwardFactory {
 		ItemMeta meta = award.getItemMeta();
 
 		// set name to award's name in config
-		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', awards.getString(rootAward + ".name")));
+		meta.setDisplayName(getName(rootAward));
 
 		// get item description
 		List<String> description = awards.getStringList(rootAward + ".description");
@@ -90,13 +91,17 @@ public class AwardFactory {
 	}
 
 	public static String getName(String awardid) {
-		return awards.getString(awardid + ".name");
+		return ChatColor.translateAlternateColorCodes('&', awards.getString(awardid + ".name"));
 
 	}
 
 	public static boolean exists(String path) {
 		return awards.contains(path);
 
+	}
+
+	public static Set<String> getListOfAwards() {
+		return awards.getKeys(false);
 	}
 
 	public static List<Category> getCategories(List<QueryAward> awards) {
