@@ -1,6 +1,6 @@
 name: Collectables
 main: com.fawkes.plugin.collectables.CollectablesPlugin
-version: 2
+version: 2.1
 load: STARTUP
 commands:
   showcase:

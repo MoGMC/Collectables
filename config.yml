@@ -1,7 +1,25 @@
 awardfile: 'https://raw.githubusercontent.com/seawee65/Collectables/master/awards.yml'
-player:
-  b834652b-3ed2-4afd-92de-afce4dcf80f1:
-    awards:
-      award:developer:
-        date: 968630400000
-        level: 20
+#lore
+Holiday:
+  - '&f&oGiven when joining on a specific holiday.'
+Monthly:
+  - '&f&oGiven the first time you log in on a month.'
+  - '&f&oAlso gives you $300!'
+Achievement:
+  - '&f&oGiven when gained multiple awards.'
+  - '&f&oAlso gives you different amounts of money!'
+Misc:
+  - '&f&oGiven manually for various things.'
+Exclusive:
+  - '&f&oGiven only for special occasions.'
+info:
+  - '&fAwards are like trophies you get for things on the server.'
+  - ''
+  - '&fThe awards are meant just for show.'
+  - '&fThey are shared across both Creative and Survival.'
+  - '&fOnly the monthly and achievement awards give you money.'
+  - ''
+  - '&fType /showcase to see your awards.'
+  - '&fTo see someone else''s, type /showcase <player>.'
+  - ''
+  - '&fwww.monkeygamesmc.com'

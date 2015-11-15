@@ -61,15 +61,31 @@ public class MenuFactory {
 
 			// set button name and misc
 			ItemMeta meta = button.getItemMeta();
+
 			meta.setDisplayName(ChatColor.RESET + c.toString() + " Awards");
+			meta.setLore(CollectablesPlugin.getLore(c.toString()));
 
 			button.setItemMeta(meta);
 
+			// set its respective slot in the menu
 			inv.setItem(11 + counter, button);
 
 			counter += 1;
 
 		}
+
+		// add info paper
+		ItemStack info = new ItemStack(Material.PAPER, 1);
+
+		ItemMeta imeta = info.getItemMeta();
+
+		imeta.setDisplayName(ChatColor.RESET + ChatColor.BOLD.toString() + "What are awards?");
+
+		imeta.setLore(CollectablesPlugin.getLore("info"));
+
+		info.setItemMeta(imeta);
+
+		inv.setItem(27, info);
 
 		return inv;
 
@@ -149,7 +165,7 @@ public class MenuFactory {
 	 */
 
 	public static void registerOpenMenu(UUID uuid, Menu menu) {
-		Bukkit.getLogger().info("Registered a menu");
+		openInventories.put(uuid, menu);
 
 	}
 

@@ -78,6 +78,11 @@ public class MenuListener implements Listener {
 
 		// Check if back button is pressed to go back to main menu
 		// "back" isnt really going to change
+		if (!itemClicked.getType().equals(Material.WOOL)) {
+			return;
+
+		}
+
 		if (itemClicked.getItemMeta().getDisplayName().equals(MenuFactory.BACK)) {
 			changeMenu(Category.MAIN, player);
 

@@ -7,8 +7,8 @@ import org.bukkit.Material;
 
 public enum Category {
 
-	MAIN("Main Menu", Material.POISONOUS_POTATO), HOLIDAY("Holiday", Material.SAPLING), MONTHLY("Monthly",
-			Material.PAPER), MISC("Misc", Material.SLIME_BALL), ACHIEVEMENT("Achievement",
+	MAIN("Main Menu", Material.POISONOUS_POTATO), HOLIDAY("Holiday", Material.NETHER_STAR), MONTHLY("Monthly",
+			Material.SAPLING), MISC("Misc", Material.FEATHER), ACHIEVEMENT("Achievement",
 					Material.STICK), EXCLUSIVE("Exclusive", Material.GOLD_INGOT);
 
 	String string;
@@ -58,11 +58,11 @@ public enum Category {
 
 		switch (material) {
 
-		case SAPLING:
+		case NETHER_STAR:
 			return HOLIDAY;
-		case PAPER:
+		case SAPLING:
 			return MONTHLY;
-		case SLIME_BALL:
+		case FEATHER:
 			return MISC;
 		case STICK:
 			return ACHIEVEMENT;

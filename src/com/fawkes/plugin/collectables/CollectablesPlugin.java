@@ -208,6 +208,20 @@ public class CollectablesPlugin extends JavaPlugin {
 
 	/* static methods */
 
+	public static List<String> getLore(String path) {
+
+		List<String> lore = config.getStringList(path);
+
+		// add color codes to all the lines of the lore
+		for (int line = 0; line < lore.size(); line++) {
+			lore.set(line, ChatColor.translateAlternateColorCodes('&', lore.get(line)));
+
+		}
+
+		return lore;
+
+	}
+
 	/* API methods */
 
 	public boolean awardExists(String awardID) {
