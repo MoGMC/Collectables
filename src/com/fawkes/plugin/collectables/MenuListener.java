@@ -50,6 +50,9 @@ public class MenuListener implements Listener {
 		 * }
 		 */
 
+		// To make sure player doesnt take item from the showcase
+		e.setCancelled(true);
+
 		if (itemClicked == null || itemClicked.getType().equals(Material.AIR)) {
 			return;
 
@@ -57,9 +60,15 @@ public class MenuListener implements Listener {
 
 		if (e.getInventory().getName().equals("Main Menu")) {
 
-			changeMenu(Category.getCategory(itemClicked.getType()), player);
+			Category c = Category.getCategory(itemClicked.getType());
 
-			e.setCancelled(true);
+			// this means they clicked something other than our buttons.
+			if (c.equals(Category.MAIN)) {
+				return;
+
+			}
+
+			changeMenu(Category.getCategory(itemClicked.getType()), player);
 
 			return;
 
@@ -73,9 +82,6 @@ public class MenuListener implements Listener {
 			changeMenu(Category.MAIN, player);
 
 		}
-
-		// To make sure player doesnt take item from the showcase
-		e.setCancelled(true);
 
 	}
 

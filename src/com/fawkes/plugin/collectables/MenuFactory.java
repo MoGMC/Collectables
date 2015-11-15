@@ -94,9 +94,9 @@ public class MenuFactory {
 
 	public static Inventory createItemInventory(String title, String playerName, List<QueryAward> awards) {
 
-		Inventory inv = Bukkit.createInventory(null, 27, title);
+		Inventory inv = Bukkit.createInventory(null, 36, title);
 
-		inv.setItem(26, backButton());
+		inv.setItem(35, backButton());
 
 		// if awards are null, return empty inventory.
 		if (awards.isEmpty()) {

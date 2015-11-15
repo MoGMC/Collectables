@@ -70,7 +70,7 @@ public enum Category {
 			return EXCLUSIVE;
 
 		default:
-			return MISC;
+			return MAIN;
 
 		}
 
