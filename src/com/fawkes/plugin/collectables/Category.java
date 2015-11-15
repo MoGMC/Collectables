@@ -48,7 +48,7 @@ public enum Category {
 			return MAIN;
 
 		default:
-			return null;
+			return MISC;
 
 		}
 

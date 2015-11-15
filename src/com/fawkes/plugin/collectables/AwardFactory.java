@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -57,13 +58,7 @@ public class AwardFactory {
 		ItemMeta meta = award.getItemMeta();
 
 		// set name to award's name in config
-		if (a instanceof QueryWildcardAward) {
-			meta.setDisplayName(getName(a).replace("{wildcard}", ((QueryWildcardAward) a).getWildcard()));
-
-		} else {
-			meta.setDisplayName(getName(a));
-
-		}
+		meta.setDisplayName(getName(a));
 
 		// get item description
 		List<String> description = awards.getStringList(rootAward + ".description");

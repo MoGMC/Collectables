@@ -99,16 +99,32 @@ public class Database {
 
 	public boolean giveAward(UUID uuid, QueryAward a) throws SQLException {
 
+		boolean wildcard = a instanceof QueryWildcardAward;
+
 		// prepare the SQL statement
 		// basically just adds a new row into the table
-		PreparedStatement ps = connection
-				.prepareStatement("INSERT INTO playerawards (uuid, awardid, date, level) VALUES (?, ?, ?, ?)");
+
+		PreparedStatement ps;
+
+		if (wildcard) {
+			ps = connection.prepareStatement(
+					"INSERT INTO wildcardawards (uuid, awardid, date, level, wildcard) VALUES (?, ?, ?, ?, ?)");
+		} else {
+			ps = connection
+					.prepareStatement("INSERT INTO playerawards (uuid, awardid, date, level) VALUES (?, ?, ?, ?)");
+
+		}
 
 		// insert the variables in place of the ?s
 		ps.setObject(1, uuid.toString());
 		ps.setString(2, a.getId());
 		ps.setLong(3, a.getDate());
 		ps.setInt(4, a.getLevel());
+
+		if (wildcard) {
+			ps.setString(5, ((QueryWildcardAward) a).getWildcard());
+
+		}
 
 		// execute the SQL statement and return if it was successful.
 		return ps.execute();
@@ -152,7 +168,7 @@ public class Database {
 		ArrayList<QueryAward> awards = new ArrayList<QueryAward>();
 
 		// query the database
-		PreparedStatement ps = connection.prepareStatement("SELECT * FROM playerawards WHERE UUID=?");
+		PreparedStatement ps = connection.prepareStatement("SELECT * FROM playerawards WHERE uuid=?");
 
 		// insert variables in place of ?s
 		ps.setString(1, uuid.toString());
@@ -171,7 +187,7 @@ public class Database {
 		 */
 
 		// query the database
-		PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM wildcardawards WHERE UUID=?");
+		PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM wildcardawards WHERE uuid=?");
 
 		// insert variables in place of ?s
 		ps1.setString(1, uuid.toString());
@@ -181,7 +197,8 @@ public class Database {
 
 		// loop through the results and turn them into awards
 		while (rs1.next()) {
-			awards.add(new QueryAward(rs.getString("awardid"), rs.getLong("date"), rs.getInt("level")));
+			awards.add(new QueryWildcardAward(rs1.getString("awardid"), rs1.getLong("date"), rs1.getInt("level"),
+					rs1.getString("wildcard")));
 
 		}
 

@@ -97,6 +97,7 @@ public class MenuFactory {
 		List<QueryAward> desiredAwards = new ArrayList<QueryAward>();
 
 		for (QueryAward a : awards) {
+
 			// if the award is the category we want, add it to desired awards.
 			if (AwardFactory.getCategory(a.getId()) == category) {
 				desiredAwards.add(a);
