@@ -97,7 +97,7 @@ public class Database {
 
 	}
 
-	public boolean giveAward(UUID uuid, String awardId, long date, int level) throws SQLException {
+	public boolean giveAward(UUID uuid, QueryAward a) throws SQLException {
 
 		// prepare the SQL statement
 		// basically just adds a new row into the table
@@ -106,24 +106,40 @@ public class Database {
 
 		// insert the variables in place of the ?s
 		ps.setObject(1, uuid.toString());
-		ps.setString(2, awardId);
-		ps.setLong(3, date);
-		ps.setInt(4, level);
+		ps.setString(2, a.getId());
+		ps.setLong(3, a.getDate());
+		ps.setInt(4, a.getLevel());
 
 		// execute the SQL statement and return if it was successful.
 		return ps.execute();
 
 	}
 
-	public boolean removeAward(UUID uuid, String awardId) throws SQLException {
+	public boolean removeAward(UUID uuid, String id, boolean wildcard) throws SQLException {
 
-		// prepare the SQL statement
-		// removes all rows with uuid = uuid and awardid = awardId
-		PreparedStatement ps = connection.prepareStatement("DELETE FROM playerawards WHERE uuid=? AND awardid=?");
+		PreparedStatement ps;
 
-		// insert the variables in place of the ?s
-		ps.setObject(1, uuid.toString());
-		ps.setString(2, awardId);
+		if (wildcard) {
+			// this means it's a wildcard wowo
+
+			// prepare the SQL statement
+			// removes all rows with uuid = uuid and awardid = awardId
+			ps = connection.prepareStatement("DELETE FROM wildcardawards WHERE uuid=? AND awardid=?");
+
+			// insert the variables in place of the ?s
+			ps.setObject(1, uuid.toString());
+			ps.setString(2, id);
+
+		} else {
+			// prepare the SQL statement
+			// removes all rows with uuid = uuid and awardid = awardId
+			ps = connection.prepareStatement("DELETE FROM playerawards WHERE uuid=? AND awardid=?");
+
+			// insert the variables in place of the ?s
+			ps.setObject(1, uuid.toString());
+			ps.setString(2, id);
+
+		}
 
 		// execute the SQL statement and return if it was successful.
 		return ps.execute();
@@ -146,6 +162,25 @@ public class Database {
 
 		// loop through the results and turn them into awards
 		while (rs.next()) {
+			awards.add(new QueryAward(rs.getString("awardid"), rs.getLong("date"), rs.getInt("level")));
+
+		}
+
+		/*
+		 * wait a minute111!!1!!1 do they have wildcard awards?
+		 */
+
+		// query the database
+		PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM wildcardawards WHERE UUID=?");
+
+		// insert variables in place of ?s
+		ps1.setString(1, uuid.toString());
+
+		// get the results of the query
+		ResultSet rs1 = ps1.executeQuery();
+
+		// loop through the results and turn them into awards
+		while (rs1.next()) {
 			awards.add(new QueryAward(rs.getString("awardid"), rs.getLong("date"), rs.getInt("level")));
 
 		}

@@ -68,3 +68,10 @@ launchaward:
   category: holiday
   description:
     - '&r&fHave a nice Christmas!'
+pants:
+  name: '{wildcard} Pants Award'
+  type: 'pants'
+  category: misc
+  display: WOODEN_DOOR
+  description:
+    - '&rnice pants'

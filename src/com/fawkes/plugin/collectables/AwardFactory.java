@@ -57,7 +57,13 @@ public class AwardFactory {
 		ItemMeta meta = award.getItemMeta();
 
 		// set name to award's name in config
-		meta.setDisplayName(getName(rootAward));
+		if (a instanceof QueryWildcardAward) {
+			meta.setDisplayName(getName(a).replace("{wildcard}", ((QueryWildcardAward) a).getWildcard()));
+
+		} else {
+			meta.setDisplayName(getName(a));
+
+		}
 
 		// get item description
 		List<String> description = awards.getStringList(rootAward + ".description");
@@ -85,13 +91,24 @@ public class AwardFactory {
 
 	}
 
-	public static Category getCategory(String awardid) {
-		return Category.getCategory(awards.getString(awardid + ".category"));
+	public static Category getCategory(String awardId) {
+		return Category.getCategory(awards.getString(awardId + ".category"));
 
 	}
 
-	public static String getName(String awardid) {
-		return ChatColor.translateAlternateColorCodes('&', awards.getString(awardid + ".name"));
+	public static String getName(QueryAward a) {
+
+		if (a instanceof QueryWildcardAward) {
+			return getColoredName(a.getId()).replace("{wildcard}", ((QueryWildcardAward) a).getWildcard());
+
+		}
+
+		return getColoredName(a.getId());
+
+	}
+
+	private static String getColoredName(String awardId) {
+		return ChatColor.translateAlternateColorCodes('&', awards.getString(awardId + ".name"));
 
 	}
 

@@ -119,9 +119,18 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		if (cmd.equals("giveaward")) {
 
+			boolean wildcard = false;
+
 			if (args.length != 3) {
-				sender.sendMessage("/giveaward <player name> <award> <level>");
-				return true;
+				if (args.length != 4) {
+					sender.sendMessage("/giveaward <player name> <award> <level> [<wildcard>]");
+					return true;
+
+				}
+
+				// they might be sending awildcard!
+
+				wildcard = true;
 
 			}
 
@@ -151,8 +160,17 @@ public class CollectablesPlugin extends JavaPlugin {
 			}
 
 			try {
-				giveAward(p.getUniqueId(), args[1], level);
-				sender.sendMessage("Gave.");
+
+				if (wildcard) {
+					giveAward(p.getUniqueId(),
+							new QueryWildcardAward(args[1], System.currentTimeMillis(), level, args[3]));
+					sender.sendMessage("Sent a wildcard award.");
+
+				} else {
+					giveAward(p.getUniqueId(), new QueryAward(args[1], System.currentTimeMillis(), level));
+					sender.sendMessage("Sent a regular award.");
+
+				}
 
 			} catch (SQLException e) {
 				sender.sendMessage("Could not award player. SQL error at time: " + System.currentTimeMillis());
@@ -166,8 +184,8 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		if (cmd.equals("removeaward")) {
 
-			if (args.length != 2) {
-				sender.sendMessage("/removeaward <player name> <award>");
+			if (args.length != 3) {
+				sender.sendMessage("/removeaward <player name> <award> <wildcard (true/false)>");
 				return true;
 
 			}
@@ -186,8 +204,10 @@ public class CollectablesPlugin extends JavaPlugin {
 
 			}
 
+			boolean wildcard = Boolean.valueOf(args[2]);
+
 			try {
-				sender.sendMessage("Query returned: " + db.removeAward(p.getUniqueId(), args[1]));
+				sender.sendMessage("Query returned: " + db.removeAward(p.getUniqueId(), args[1], wildcard));
 
 			} catch (SQLException e) {
 				sender.sendMessage(
@@ -282,9 +302,9 @@ public class CollectablesPlugin extends JavaPlugin {
 	}
 
 	// assuming you did all the checks before
-	public void giveAward(UUID uuid, String awardId, int baseLevel) throws SQLException {
+	public void giveAward(UUID uuid, QueryAward a) throws SQLException {
 
-		db.giveAward(uuid, awardId, System.currentTimeMillis(), baseLevel);
+		db.giveAward(uuid, a);
 
 		// wowo alert!
 
@@ -292,18 +312,18 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		// if they're online now, display now. if not, store it away.
 		if (p.isOnline()) {
-			sendAwardMessages(p.getPlayer(), awardId);
+			sendAwardMessages(p.getPlayer(), AwardFactory.getName(a));
 
 		} else {
-			storeOfflineAward(uuid, awardId);
+			storeOfflineAward(uuid, a.getId());
 
 		}
 
 	}
 
 	// assuming you did checks before?
-	public void removeAward(UUID uuid, String awardId) throws SQLException {
-		db.removeAward(uuid, awardId);
+	public void removeAward(UUID uuid, String awardid, boolean wildcard) throws SQLException {
+		db.removeAward(uuid, awardid, wildcard);
 
 	}
 
@@ -324,14 +344,12 @@ public class CollectablesPlugin extends JavaPlugin {
 
 	}
 
-	public void sendAwardMessages(Player p, String awardId) {
-
-		String aname = AwardFactory.getName(awardId);
+	public void sendAwardMessages(Player p, String awardName) {
 
 		StringBuilder s = new StringBuilder(ChatColor.GOLD.toString());
 
 		s.append("You have the received the award: [");
-		s.append(aname);
+		s.append(awardName);
 		s.append(ChatColor.GOLD.toString());
 		s.append("]! Type /showcase to view all of your awards.");
 
@@ -341,7 +359,7 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		s1.append(p.getDisplayName());
 		s1.append(" has just received the award: [");
-		s1.append(aname);
+		s1.append(awardName);
 		s1.append(ChatColor.GREEN.toString());
 		s1.append("]!");
 

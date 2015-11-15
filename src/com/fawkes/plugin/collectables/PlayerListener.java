@@ -2,6 +2,7 @@ package com.fawkes.plugin.collectables;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -37,6 +38,20 @@ public class PlayerListener implements Listener {
 
 			}
 
+			ArrayList<QueryAward> awards = new ArrayList<QueryAward>();
+
+			while (rs.next()) {
+
+				if (rs.getString(3).equals("{wildcard}")) {
+					awards.add(new QueryAward(rs.getString(2), 0, 0));
+					continue;
+
+				}
+
+				awards.add(new QueryWildcardAward(rs.getString(2), 0, 0, rs.getString(3)));
+
+			}
+
 			Player p = e.getPlayer();
 
 			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
@@ -53,12 +68,12 @@ public class PlayerListener implements Listener {
 					try {
 
 						// there are things in the ResultSet!
-						while (rs.next()) {
+						for (QueryAward a : awards) {
 							// we already gave it to them, we just have to
 							// display
 							// nice
 							// messages.
-							plugin.sendAwardMessages(p, rs.getString(2));
+							plugin.sendAwardMessages(p, AwardFactory.getName(a));
 							// TODO: maybe switch to column name instead of
 							// index?
 
