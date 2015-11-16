@@ -1,22 +1,4 @@
-#all names and descriptions support color codes. (use &<code>) (types do not support color codes)
-#Category ids:
-#holiday: 0
-#monthly: 1
-#misc: 2
-#achievement: 3
-#exclusive: 4
-#
-#example:
-#under 'award'
-#award id (use format 'award:name')
-#name: the name you want to be displayed on the item
-#type: displays in lore as "Level <level> <type>"
-#display: the bukkit item id.
-#category: holiday, monthly, misc, achievement, exclusive
-#description:
-#- extra lore
-#- can be multilined and color coded
-#- use yaml listing
+#only name and description can be colored
 developer:
   name: '&fThe Developer Award'
   type: 'piece of paper'
@@ -75,6 +57,13 @@ pants:
   display: GOLD_INGOT
   description:
     - '&rnice pants'
+3awardaward:
+  name: 'The Three Award Award'
+  type: 'award'
+  category: achievement
+  display: STRING
+  description:
+    - 'You have three awards!'
 5awardaward:
   name: 'The Five Award Award'
   type: 'award'
@@ -82,3 +71,10 @@ pants:
   display: STRING
   description:
     - 'You have five awards!'
+10awardaward:
+  name: 'The Ten Award Award'
+  type: 'award'
+  category: achievement
+  display: STRING
+  description:
+    - 'You have ten awards!'
