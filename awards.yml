@@ -72,9 +72,10 @@ pants:
   name: '{wildcard} Pants Award'
   type: 'pants'
   category: misc
-  display: WOODEN_DOOR
+  display: GOLD_INGOT
   description:
     - '&rnice pants'
+<<<<<<< HEAD
 5awardaward:
   name: 'The Five Award Award'
   type: 'award'
@@ -82,3 +83,12 @@ pants:
   display: STRING
   description:
     - 'You have five awards!'
+=======
+misc:
+  name: 'misc award'
+  type: 'misc award'
+  category: misc
+  display: WOODEN_DOOR
+  description:
+    - 'cool'
+>>>>>>> 8bbbefc800ca34c141e6679e966b22d8737170d6
