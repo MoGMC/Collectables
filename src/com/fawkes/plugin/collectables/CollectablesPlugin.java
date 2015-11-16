@@ -267,6 +267,11 @@ public class CollectablesPlugin extends JavaPlugin {
 
 	}
 
+	public int getAwardCount(UUID uuid) throws SQLException {
+		return db.getAwardCount(uuid);
+
+	}
+
 	public List<QueryAward> getAwards(UUID uuid, CommandSender sender) {
 		List<QueryAward> awardsList = null;
 
@@ -304,6 +309,9 @@ public class CollectablesPlugin extends JavaPlugin {
 	// assuming you did all the checks before
 	public void giveAward(UUID uuid, QueryAward a) throws SQLException {
 
+		// call custom event
+		Bukkit.getPluginManager().callEvent(new AwardGiveEvent(uuid, a));
+
 		db.giveAward(uuid, a);
 
 		// wowo alert!
@@ -315,7 +323,7 @@ public class CollectablesPlugin extends JavaPlugin {
 			sendAwardMessages(p.getPlayer(), AwardFactory.getName(a));
 
 		} else {
-			storeOfflineAward(uuid, a.getId());
+			storeOfflineAward(uuid, a);
 
 		}
 
@@ -334,8 +342,8 @@ public class CollectablesPlugin extends JavaPlugin {
 
 	}
 
-	public void storeOfflineAward(UUID uuid, String awardId) throws SQLException {
-		db.storeOfflineAward(uuid, awardId);
+	public void storeOfflineAward(UUID uuid, QueryAward a) throws SQLException {
+		db.storeOfflineAward(uuid, a);
 
 	}
 

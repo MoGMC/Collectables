@@ -57,11 +57,20 @@ public class Database {
 
 	}
 
-	public boolean storeOfflineAward(UUID uuid, String awardId) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("INSERT INTO offlineplayers (uuid, awardid) VALUES (?, ?)");
+	public boolean storeOfflineAward(UUID uuid, QueryAward a) throws SQLException {
+		PreparedStatement ps = connection
+				.prepareStatement("INSERT INTO offlineplayers (uuid, awardid, wildcard) VALUES (?, ?, ?)");
 
 		ps.setString(1, uuid.toString());
-		ps.setString(2, awardId);
+		ps.setString(2, a.getId());
+
+		if (a instanceof QueryWildcardAward) {
+			ps.setString(3, ((QueryWildcardAward) a).getWildcard());
+
+		} else {
+			ps.setString(3, "{wildcard}");
+
+		}
 
 		return ps.execute();
 
@@ -159,6 +168,42 @@ public class Database {
 
 		// execute the SQL statement and return if it was successful.
 		return ps.execute();
+
+	}
+
+	public int getAwardCount(UUID uuid) throws SQLException {
+
+		int count = 0;
+
+		// query the database
+		PreparedStatement ps = connection.prepareStatement("SELECT * FROM playerawards WHERE uuid=?");
+
+		// insert variables in place of ?s
+		ps.setString(1, uuid.toString());
+
+		// get the results of the query
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			count++;
+
+		}
+
+		// query the database
+		PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM wildcardawards WHERE uuid=?");
+
+		// insert variables in place of ?s
+		ps1.setString(1, uuid.toString());
+
+		// get the results of the query
+		ResultSet rs1 = ps1.executeQuery();
+
+		while (rs1.next()) {
+			count++;
+
+		}
+
+		return count;
 
 	}
 

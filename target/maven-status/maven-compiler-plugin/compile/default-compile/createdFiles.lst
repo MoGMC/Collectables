@@ -3,6 +3,7 @@ com/fawkes/plugin/collectables/AwardFactory.class
 com/fawkes/plugin/collectables/Category$1.class
 com/fawkes/plugin/collectables/QueryWildcardAward.class
 com/fawkes/plugin/collectables/CollectablesPlugin.class
+com/fawkes/plugin/collectables/AwardGiveEvent.class
 com/fawkes/plugin/collectables/PlayerListener.class
 com/fawkes/plugin/collectables/PlayerListener$1.class
 com/fawkes/plugin/collectables/Database.class

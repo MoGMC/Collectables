@@ -75,3 +75,10 @@ pants:
   display: WOODEN_DOOR
   description:
     - '&rnice pants'
+5awardaward:
+  name: 'The Five Award Award'
+  type: 'award'
+  category: achievement
+  display: STRING
+  description:
+    - 'You have five awards!'

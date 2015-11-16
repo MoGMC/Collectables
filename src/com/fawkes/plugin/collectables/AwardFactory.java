@@ -75,7 +75,8 @@ public class AwardFactory {
 
 		// add "granted to PLAYER on DATE"
 		description.add("");
-		description.add(ChatColor.GRAY + "Granted to " + name + " on " + new Date(a.date).toString());
+		description.add(ChatColor.GRAY + "Granted to " + name + " on");
+		description.add(ChatColor.GRAY + new Date(a.date).toString());
 
 		// set lore to description in config
 		meta.setLore(description);
