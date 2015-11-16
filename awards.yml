@@ -75,10 +75,3 @@ pants:
   display: GOLD_INGOT
   description:
     - '&rnice pants'
-misc:
-  name: 'misc award'
-  type: 'misc award'
-  category: misc
-  display: GOLD_INGOT
-  description:
-    - 'cool'
