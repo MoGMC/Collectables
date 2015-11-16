@@ -79,6 +79,6 @@ misc:
   name: 'misc award'
   type: 'misc award'
   category: misc
-  display: WOODEN_DOOR
+  display: GOLD_INGOT
   description:
     - 'cool'
