@@ -2,14 +2,19 @@ package com.fawkes.plugin.collectables;
 
 public class QueryAward {
 
-	String id;
-	long date;
-	int level;
+	private String id, meta;
+	private long date;
+	private int level;
 
 	public QueryAward(String id, long date, int level) {
 		this.id = id;
 		this.date = date;
 		this.level = level;
+
+	}
+
+	public void addMeta(String meta) {
+		this.meta = meta;
 
 	}
 
@@ -25,6 +30,17 @@ public class QueryAward {
 
 	public int getLevel() {
 		return level;
+
+	}
+
+	// TODO: more use for meta.
+	public String getMeta() {
+		return meta;
+
+	}
+
+	public boolean hasMeta() {
+		return meta != null;
 
 	}
 

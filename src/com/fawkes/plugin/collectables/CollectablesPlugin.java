@@ -119,18 +119,18 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		if (cmd.equals("giveaward")) {
 
-			boolean wildcard = false;
+			boolean hasmeta = false;
 
 			if (args.length != 3) {
 				if (args.length != 4) {
-					sender.sendMessage("/giveaward <player name> <award> <level> [<wildcard>]");
+					sender.sendMessage("/giveaward <player name> <award> <level> [<meta>]");
 					return true;
 
 				}
 
 				// they might be sending awildcard!
 
-				wildcard = true;
+				hasmeta = true;
 
 			}
 
@@ -161,16 +161,17 @@ public class CollectablesPlugin extends JavaPlugin {
 
 			try {
 
-				if (wildcard) {
-					giveAward(p.getUniqueId(),
-							new QueryWildcardAward(args[1], System.currentTimeMillis(), level, args[3]));
-					sender.sendMessage("Sent a wildcard award.");
+				QueryAward a = new QueryAward(args[1], System.currentTimeMillis(), level);
 
-				} else {
-					giveAward(p.getUniqueId(), new QueryAward(args[1], System.currentTimeMillis(), level));
-					sender.sendMessage("Sent a regular award.");
+				if (hasmeta) {
+					a.addMeta(args[3]);
+					sender.sendMessage("Added metadata: " + args[3]);
 
 				}
+
+				giveAward(p.getUniqueId(), a);
+
+				sender.sendMessage("Sent.");
 
 			} catch (SQLException e) {
 				sender.sendMessage("Could not award player. SQL error at time: " + System.currentTimeMillis());
@@ -184,8 +185,8 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		if (cmd.equals("removeaward")) {
 
-			if (args.length != 3) {
-				sender.sendMessage("/removeaward <player name> <award> <wildcard (true/false)>");
+			if (args.length != 2) {
+				sender.sendMessage("/removeaward <player name> <award>");
 				return true;
 
 			}
@@ -204,10 +205,8 @@ public class CollectablesPlugin extends JavaPlugin {
 
 			}
 
-			boolean wildcard = Boolean.valueOf(args[2]);
-
 			try {
-				sender.sendMessage("Query returned: " + db.removeAward(p.getUniqueId(), args[1], wildcard));
+				sender.sendMessage("Query returned: " + db.removeAward(p.getUniqueId(), args[1]));
 
 			} catch (SQLException e) {
 				sender.sendMessage(
@@ -308,9 +307,17 @@ public class CollectablesPlugin extends JavaPlugin {
 
 	// assuming you did all the checks before
 	public void giveAward(UUID uuid, QueryAward a) throws SQLException {
+		giveAward(uuid, a, true);
+
+	}
+
+	public void giveAward(UUID uuid, QueryAward a, boolean callEvent) throws SQLException {
 
 		// call custom event
-		Bukkit.getPluginManager().callEvent(new AwardGiveEvent(uuid, a));
+		if (callEvent) {
+			Bukkit.getPluginManager().callEvent(new AwardGiveEvent(uuid, a));
+
+		}
 
 		db.giveAward(uuid, a);
 
@@ -330,8 +337,8 @@ public class CollectablesPlugin extends JavaPlugin {
 	}
 
 	// assuming you did checks before?
-	public void removeAward(UUID uuid, String awardid, boolean wildcard) throws SQLException {
-		db.removeAward(uuid, awardid, wildcard);
+	public void removeAward(UUID uuid, String awardid) throws SQLException {
+		db.removeAward(uuid, awardid);
 
 	}
 

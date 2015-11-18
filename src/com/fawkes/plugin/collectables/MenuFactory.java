@@ -79,13 +79,24 @@ public class MenuFactory {
 
 		ItemMeta imeta = info.getItemMeta();
 
-		imeta.setDisplayName(ChatColor.RESET + ChatColor.BOLD.toString() + "What are awards?");
+		imeta.setDisplayName(ChatColor.BOLD.toString() + "What are awards?");
 
 		imeta.setLore(CollectablesPlugin.getLore("info"));
 
 		info.setItemMeta(imeta);
 
+		// add a clock!
+		ItemStack clock = new ItemStack(Material.WATCH, 1);
+
+		ItemMeta cmeta = clock.getItemMeta();
+
+		cmeta.setLore(Arrays.asList(ChatColor.BOLD + AwardFactory.formatDate(System.currentTimeMillis()),
+				ChatColor.GRAY + "The server runs on UTC!"));
+
+		clock.setItemMeta(cmeta);
+
 		inv.setItem(27, info);
+		inv.setItem(35, clock);
 
 		return inv;
 

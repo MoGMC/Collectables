@@ -34,4 +34,9 @@ public class AwardGiveEvent extends Event {
 
 	}
 
+	public static HandlerList getHandlerList() {
+		return handlers;
+
+	}
+
 }

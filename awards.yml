@@ -9,7 +9,7 @@ developer:
 cookie:
   name: '&r&lA Special Cookie'
   type: 'cookie'
-  display: COOKIE
+  display: COOKED_CHICKEN
   category: holiday
   description:
     - '&6A tasty treat to eat.'

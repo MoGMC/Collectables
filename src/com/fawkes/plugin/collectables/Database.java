@@ -24,8 +24,7 @@ public class Database {
 	public boolean setLevel(UUID uuid, String awardId, int level) throws SQLException {
 
 		// prepares the SQL statement
-		PreparedStatement ps = connection
-				.prepareStatement("UPDATE playerawards SET level=? WHERE uuid=? AND awardid=?");
+		PreparedStatement ps = connection.prepareStatement("UPDATE awards SET level=? WHERE uuid=? AND awardid=?");
 
 		// replaces the ?s in the prepared statement with variables
 		ps.setInt(1, level);
@@ -64,8 +63,8 @@ public class Database {
 		ps.setString(1, uuid.toString());
 		ps.setString(2, a.getId());
 
-		if (a instanceof QueryWildcardAward) {
-			ps.setString(3, ((QueryWildcardAward) a).getWildcard());
+		if (a.hasMeta()) {
+			ps.setString(3, a.getMeta());
 
 		} else {
 			ps.setString(3, "{wildcard}");
@@ -85,7 +84,7 @@ public class Database {
 			 * selects all of the rows that have both "uuid" equals
 			 * "uuid.toString()" and "awardid" equals "awardId"
 			 */
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM playerawards WHERE uuid=? AND awardid=?");
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM awards WHERE uuid=? AND awardid=?");
 
 			// replaces the ?s in the prepared statement with variables
 			ps.setObject(1, uuid.toString());
@@ -108,30 +107,31 @@ public class Database {
 
 	public boolean giveAward(UUID uuid, QueryAward a) throws SQLException {
 
-		boolean wildcard = a instanceof QueryWildcardAward;
+		boolean hasmeta = a.hasMeta();
 
 		// prepare the SQL statement
 		// basically just adds a new row into the table
 
-		PreparedStatement ps;
-
-		if (wildcard) {
-			ps = connection.prepareStatement(
-					"INSERT INTO wildcardawards (uuid, awardid, date, level, wildcard) VALUES (?, ?, ?, ?, ?)");
-		} else {
-			ps = connection
-					.prepareStatement("INSERT INTO playerawards (uuid, awardid, date, level) VALUES (?, ?, ?, ?)");
-
-		}
+		PreparedStatement ps = connection
+				.prepareStatement("INSERT INTO awards (uuid, awardid, date, level, hasmeta) VALUES (?, ?, ?, ?, ?)");
 
 		// insert the variables in place of the ?s
 		ps.setObject(1, uuid.toString());
 		ps.setString(2, a.getId());
 		ps.setLong(3, a.getDate());
 		ps.setInt(4, a.getLevel());
+		ps.setBoolean(5, hasmeta);
 
-		if (wildcard) {
-			ps.setString(5, ((QueryWildcardAward) a).getWildcard());
+		// if there is meta, go set it in the other table.
+		if (hasmeta) {
+			PreparedStatement metaps = connection
+					.prepareStatement("INSERT INTO metadata (uuid, awardid, meta) VALUES (?, ?, ?)");
+
+			metaps.setObject(1, uuid.toString());
+			metaps.setString(2, a.getId());
+			metaps.setString(3, a.getMeta());
+
+			metaps.execute();
 
 		}
 
@@ -140,31 +140,34 @@ public class Database {
 
 	}
 
-	public boolean removeAward(UUID uuid, String id, boolean wildcard) throws SQLException {
+	// TODO: return if it was successfull or not
+	public boolean removeAward(UUID uuid, String awardid) throws SQLException {
 
-		PreparedStatement ps;
+		// query database and see if it had any awardid;
+		PreparedStatement metacheckps = connection
+				.prepareStatement("SELECT * FROM metadata WHERE uuid=? AND id=awardid");
 
-		if (wildcard) {
-			// this means it's a wildcard wowo
+		ResultSet metacheckrs = metacheckps.executeQuery();
 
-			// prepare the SQL statement
-			// removes all rows with uuid = uuid and awardid = awardId
-			ps = connection.prepareStatement("DELETE FROM wildcardawards WHERE uuid=? AND awardid=?");
+		if (metacheckrs.next()) {
+			// wow there is meta! go delete it.
+			PreparedStatement metaps = connection.prepareStatement("DELETE FROM metadata WHERE uuid=? AND awardid=?");
 
-			// insert the variables in place of the ?s
-			ps.setObject(1, uuid.toString());
-			ps.setString(2, id);
+			metaps.setObject(1, uuid.toString());
+			metaps.setString(2, awardid);
 
-		} else {
-			// prepare the SQL statement
-			// removes all rows with uuid = uuid and awardid = awardId
-			ps = connection.prepareStatement("DELETE FROM playerawards WHERE uuid=? AND awardid=?");
-
-			// insert the variables in place of the ?s
-			ps.setObject(1, uuid.toString());
-			ps.setString(2, id);
+			metaps.execute();
 
 		}
+
+		PreparedStatement ps;
+		// prepare the SQL statement
+		// removes all rows with uuid = uuid and awardid = awardId
+		ps = connection.prepareStatement("DELETE FROM awards WHERE uuid=? AND awardid=?");
+
+		// insert the variables in place of the ?s
+		ps.setObject(1, uuid.toString());
+		ps.setString(2, awardid);
 
 		// execute the SQL statement and return if it was successful.
 		return ps.execute();
@@ -176,7 +179,7 @@ public class Database {
 		int count = 0;
 
 		// query the database
-		PreparedStatement ps = connection.prepareStatement("SELECT * FROM playerawards WHERE uuid=?");
+		PreparedStatement ps = connection.prepareStatement("SELECT * FROM awards WHERE uuid=?");
 
 		// insert variables in place of ?s
 		ps.setString(1, uuid.toString());
@@ -185,20 +188,6 @@ public class Database {
 		ResultSet rs = ps.executeQuery();
 
 		while (rs.next()) {
-			count++;
-
-		}
-
-		// query the database
-		PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM wildcardawards WHERE uuid=?");
-
-		// insert variables in place of ?s
-		ps1.setString(1, uuid.toString());
-
-		// get the results of the query
-		ResultSet rs1 = ps1.executeQuery();
-
-		while (rs1.next()) {
 			count++;
 
 		}
@@ -208,12 +197,11 @@ public class Database {
 	}
 
 	public List<QueryAward> queryShowcase(UUID uuid) throws SQLException {
-
 		// make the list we'll add the award variables to
 		ArrayList<QueryAward> awards = new ArrayList<QueryAward>();
 
 		// query the database
-		PreparedStatement ps = connection.prepareStatement("SELECT * FROM playerawards WHERE uuid=?");
+		PreparedStatement ps = connection.prepareStatement("SELECT * FROM awards WHERE uuid=?");
 
 		// insert variables in place of ?s
 		ps.setString(1, uuid.toString());
@@ -223,27 +211,35 @@ public class Database {
 
 		// loop through the results and turn them into awards
 		while (rs.next()) {
-			awards.add(new QueryAward(rs.getString("awardid"), rs.getLong("date"), rs.getInt("level")));
 
-		}
+			// prepare the award to add to the list
+			QueryAward a = new QueryAward(rs.getString("awardid"), rs.getLong("date"), rs.getInt("level"));
 
-		/*
-		 * wait a minute111!!1!!1 do they have wildcard awards?
-		 */
+			// if the award has meta, go get it from the meta table!
+			if (rs.getBoolean("hasmeta")) {
+				// same drill
+				PreparedStatement metaps = connection
+						.prepareStatement("SELECT * FROM metadata WHERE uuid=? AND awardid=?");
 
-		// query the database
-		PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM wildcardawards WHERE uuid=?");
+				metaps.setObject(1, uuid.toString());
+				metaps.setString(2, a.getId());
 
-		// insert variables in place of ?s
-		ps1.setString(1, uuid.toString());
+				ResultSet metars = metaps.executeQuery();
 
-		// get the results of the query
-		ResultSet rs1 = ps1.executeQuery();
+				// goes to the row, but also checks if it isn't there.
+				if (!metars.next()) {
+					// screwup
+					Bukkit.getLogger().severe("Could not get meta for supposed meta award: " + rs.getString("awardid")
+							+ " for UUID " + uuid.toString());
 
-		// loop through the results and turn them into awards
-		while (rs1.next()) {
-			awards.add(new QueryWildcardAward(rs1.getString("awardid"), rs1.getLong("date"), rs1.getInt("level"),
-					rs1.getString("wildcard")));
+				}
+
+				// add meta to queryaward
+				a.addMeta(metars.getString("meta"));
+
+			}
+
+			awards.add(a);
 
 		}
 

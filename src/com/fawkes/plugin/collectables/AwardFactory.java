@@ -6,12 +6,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -23,6 +24,8 @@ public class AwardFactory {
 	/*
 	 * this class doesn't really even need to be instance-ized
 	 */
+
+	static SimpleDateFormat dateformat = new SimpleDateFormat("MMMM d, yyyy @ hh:mm:ss");
 
 	// private final File awards = new File("awards.yml");
 	private static YamlConfiguration awards = null;
@@ -43,6 +46,10 @@ public class AwardFactory {
 		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 
 		awards = YamlConfiguration.loadConfiguration(file);
+
+		// set dateformat to be UTC
+
+		dateformat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 	}
 
@@ -76,7 +83,7 @@ public class AwardFactory {
 		// add "granted to PLAYER on DATE"
 		description.add("");
 		description.add(ChatColor.GRAY + "Granted to " + name + " on");
-		description.add(ChatColor.GRAY + new Date(a.date).toString());
+		description.add(ChatColor.GRAY + formatDate(a.getDate()));
 
 		// set lore to description in config
 		meta.setLore(description);
@@ -94,8 +101,8 @@ public class AwardFactory {
 
 	public static String getName(QueryAward a) {
 
-		if (a instanceof QueryWildcardAward) {
-			return getColoredName(a.getId()).replace("{wildcard}", ((QueryWildcardAward) a).getWildcard());
+		if (a.hasMeta()) {
+			return getColoredName(a.getId()).replace("{wildcard}", a.getMeta());
 
 		}
 
@@ -115,6 +122,11 @@ public class AwardFactory {
 
 	public static Set<String> getListOfAwards() {
 		return awards.getKeys(false);
+	}
+
+	public static String formatDate(long date) {
+		return dateformat.format(date);
+
 	}
 
 	public static List<Category> getCategories(List<QueryAward> awards) {

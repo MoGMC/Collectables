@@ -42,13 +42,17 @@ public class PlayerListener implements Listener {
 
 			while (rs.next()) {
 
-				if (rs.getString(3).equals("{wildcard}")) {
-					awards.add(new QueryAward(rs.getString(2), 0, 0));
-					continue;
+				// create award to add to list
+				QueryAward a = new QueryAward(rs.getString(2), 0, 0);
+
+				// is the meta field just default?
+				if (!rs.getString(3).equals("{wildcard}")) {
+					// it isn't? okay, add the meta.
+					a.addMeta(rs.getString(3));
 
 				}
 
-				awards.add(new QueryWildcardAward(rs.getString(2), 0, 0, rs.getString(3)));
+				awards.add(a);
 
 			}
 
