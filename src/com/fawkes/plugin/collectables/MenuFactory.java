@@ -90,7 +90,9 @@ public class MenuFactory {
 
 		ItemMeta cmeta = clock.getItemMeta();
 
-		cmeta.setLore(Arrays.asList(ChatColor.BOLD + AwardFactory.formatDate(System.currentTimeMillis()),
+		cmeta.setDisplayName(ChatColor.BOLD.toString() + "Clock");
+
+		cmeta.setLore(Arrays.asList(ChatColor.RESET + AwardFactory.formatDate(System.currentTimeMillis()),
 				ChatColor.GRAY + "The server runs on UTC!"));
 
 		clock.setItemMeta(cmeta);

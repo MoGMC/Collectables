@@ -373,6 +373,7 @@ public class CollectablesPlugin extends JavaPlugin {
 		StringBuilder s1 = new StringBuilder(ChatColor.GREEN.toString());
 
 		s1.append(p.getDisplayName());
+		s1.append(ChatColor.GREEN.toString());
 		s1.append(" has just received the award: [");
 		s1.append(awardName);
 		s1.append(ChatColor.GREEN.toString());

@@ -93,7 +93,7 @@ public class PlayerListener implements Listener {
 
 				}
 
-			}, 70L);
+			}, 100L);
 
 		} catch (SQLException sql) {
 			Bukkit.getLogger().severe("Could not give player their offline awards.");
