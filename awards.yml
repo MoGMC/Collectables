@@ -6,6 +6,20 @@ developer:
   category: misc
   description:
     - '&fA reward given to developers.'
+donator:
+  name: '&rDonator Award'
+  type: 'gratitude crystal'
+  display: DIAMOND
+  category: misc
+  description:
+    - '&fThank you for donating to the server!'
+staff:
+  name: '&rStaff Award'
+  type: 'ban hammer'
+  display: WOOD_AXE
+  category: misc
+  description:
+    - '&fThank you for, and congratulations on being staff!'
 cookie:
   name: '&r&lA Special Cookie'
   type: 'cookie'
