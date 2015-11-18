@@ -78,3 +78,18 @@ pants:
   display: STRING
   description:
     - 'You have ten awards!'
+2015thanksgiving:
+  name: '&eThanksgiving 2015'
+  type: 'potato'
+  category: holiday
+  display: BAKED_POTATO
+  description:
+    - '&rIt''s Thanksgiving!'
+    - '&rThanks for joining us!'
+buildcomp:
+  name: '&r{wildcard} Build Competition Winner'
+  type: 'building trophy'
+  category: misc
+  display: BRICK
+  description:
+    - '&8Nice job!'
