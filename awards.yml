@@ -84,8 +84,8 @@ pants:
   category: holiday
   display: BAKED_POTATO
   description:
-    - '&rIt''s Thanksgiving!'
-    - '&rThanks for joining us!'
+    - '&6It''s Thanksgiving!'
+    - '&6Thanks for joining us!'
 buildcomp:
   name: '&r{wildcard} Build Competition Winner'
   type: 'building trophy'
