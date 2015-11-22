@@ -12,12 +12,12 @@ charity:
   display: GOLDEN_APPLE
   category: exclusive
   description:
-    - 'A token showing that you did good deed!'
+    - '&fA token showing that you did a good deed!'
     - ''
-    - 'Given for donating during the 2015 Thanksgiving charity week'
-    - 'All money raised went to St Jude Childrends Hospital' 
+    - '&7Given for donating during the 2015 Thanksgiving charity week'
+    - '&7All money raised went to St. Jude Children''s Hospital' 
     - ''
-    - 'This award is exclusive and not available again in the future'
+    - '&7This award is exclusive and not available again in the future'
 donator:
   name: '&rDonator Award'
   type: 'gratitude crystal'

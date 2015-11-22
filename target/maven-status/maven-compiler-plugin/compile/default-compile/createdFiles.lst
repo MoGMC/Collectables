@@ -1,6 +1,8 @@
 com/fawkes/plugin/collectables/QueryAward.class
 com/fawkes/plugin/collectables/AwardFactory.class
 com/fawkes/plugin/collectables/Category$1.class
+com/fawkes/plugin/collectables/command/BaseCommand.class
+com/fawkes/plugin/collectables/command/GiveAwardCommand.class
 com/fawkes/plugin/collectables/CollectablesPlugin.class
 com/fawkes/plugin/collectables/AwardGiveEvent.class
 com/fawkes/plugin/collectables/PlayerListener.class

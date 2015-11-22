@@ -24,3 +24,8 @@ commands:
     usage: /listawards
     permission: collectables.listawards
     permission-message: You don't have permission to do that!
+  refreshawards:
+    description: List all possible awards.
+    usage: /listawards
+    permission: collectables.refreshawards
+    permission-message: You don't have permission to do that!

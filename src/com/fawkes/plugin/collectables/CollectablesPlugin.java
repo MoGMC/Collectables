@@ -32,18 +32,7 @@ public class CollectablesPlugin extends JavaPlugin {
 		saveDefaultConfig();
 		config = getConfig();
 
-		// Set up the little awards database
-		try {
-			af = new AwardFactory(config.getString("awardfile"));
-
-		} catch (IOException e) {
-
-			Bukkit.getLogger().severe("Failed to fetch awards.yml, disabling.");
-			e.printStackTrace();
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
-
-		}
+		refreshAwards();
 
 		// Connect to MySQL server
 		try {
@@ -63,6 +52,22 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		// register this as an api for bukkit
 		this.getServer().getServicesManager().register(CollectablesPlugin.class, this, this, ServicePriority.Normal);
+
+	}
+
+	public void refreshAwards() {
+		// Set up the little awards database
+		try {
+			AwardFactory.refresh(config.getString("awardfile"));
+
+		} catch (IOException e) {
+
+			Bukkit.getLogger().severe("Failed to fetch awards.yml, disabling.");
+			e.printStackTrace();
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+
+		}
 
 	}
 
@@ -230,6 +235,15 @@ public class CollectablesPlugin extends JavaPlugin {
 			}
 
 			sender.sendMessage(s.toString());
+
+			return true;
+
+		}
+
+		if (cmd.equals("refreshawards")) {
+			refreshAwards();
+
+			sender.sendMessage("Refreshed awards.");
 
 			return true;
 

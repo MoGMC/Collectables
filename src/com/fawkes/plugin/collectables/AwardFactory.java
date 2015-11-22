@@ -30,8 +30,7 @@ public class AwardFactory {
 	// private final File awards = new File("awards.yml");
 	private static YamlConfiguration awards = null;
 
-	public AwardFactory(String url) throws IOException {
-
+	public static void refresh(String url) throws IOException {
 		/* Load award yaml from url */
 
 		URL website = new URL(url);
