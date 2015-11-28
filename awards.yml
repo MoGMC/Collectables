@@ -6,6 +6,13 @@ developer:
   category: misc
   description:
     - '&fA reward given to developers.'
+rich:
+  name: '&fRich Boy Award'
+  type: 'coin'
+  display: GOLD_NUGGET
+  category: exclusive
+  description:
+    - '&fBe the first person ever to reach $100.000 on Creative'
 charity:
   name: '&6Charity Award'
   type: 'golden apple'
