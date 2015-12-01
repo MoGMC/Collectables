@@ -70,7 +70,7 @@ launchaward:
     - 'Souvenir of the Collectables L(a)unch Day.'
     - 'Thanks for your support!'
 2015december:
-  name: '&r&2December 2015 Awawrd'
+  name: '&r&2December 2015 Award'
   type: 'door'
   display: WOODEN_DOOR
   category: monthly
