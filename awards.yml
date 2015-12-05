@@ -72,7 +72,7 @@ launchaward:
 2015december:
   name: '&r&2December 2015 Award'
   type: 'door'
-  display: OAK_DOOR
+  display: APPLE
   category: monthly
   description:
     - "&r&fThanks for joining us for December 2015!"
