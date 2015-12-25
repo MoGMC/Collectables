@@ -126,3 +126,10 @@ buildcomp:
   display: BRICK
   description:
     - '&8Nice job!'
+2016january:
+  name: '&rJanuary 2016 Award'
+  type: 'snowball'
+  category: monthly
+  display: SNOWBALL
+  description:
+    - '&eHappy new year!'
