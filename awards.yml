@@ -133,3 +133,10 @@ buildcomp:
   display: SNOWBALL
   description:
     - '&eHappy new year!'
+2016newyear:
+  name: '&eNew Year Award'
+  type: 'firecracker'
+  category: holiday
+  display: FIREWORK
+  description:
+    - '&fMonkeyCraft wishes you a happy new year!'
