@@ -125,7 +125,15 @@ buildcomp:
   category: misc
   display: BRICK
   description:
-    - '&8Nice job!'
+    - 'Congratulations on winning the monthly build contest!'
+topvoter:
+  name: '&r{wildcard} Top Voter'
+  type: 'voting paper'
+  category: misc
+  display: PAPER
+  description:
+    - 'Thank you for being in the top 3 voters of the month!'
+    - 'Your votes help the server a lot.'
 2016january:
   name: '&rJanuary 2016 Award'
   type: 'snowball'
