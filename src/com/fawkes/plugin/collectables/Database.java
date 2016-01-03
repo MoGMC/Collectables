@@ -145,7 +145,10 @@ public class Database {
 
 		// query database and see if it had any awardid;
 		PreparedStatement metacheckps = connection
-				.prepareStatement("SELECT * FROM metadata WHERE uuid=? AND id=awardid");
+				.prepareStatement("SELECT * FROM metadata WHERE uuid=? AND awardid=?");
+
+		metacheckps.setString(1, uuid.toString());
+		metacheckps.setString(2, awardid);
 
 		ResultSet metacheckrs = metacheckps.executeQuery();
 

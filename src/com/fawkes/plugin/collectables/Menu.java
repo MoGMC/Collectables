@@ -11,6 +11,7 @@ public class Menu {
 	 * on inventory exit event.
 	 */
 
+	// player name is name of the showcase's owner
 	String playerName;
 
 	List<QueryAward> awards;

@@ -5,14 +5,13 @@ import java.sql.SQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import com.fawkes.plugin.collectables.AwardFactory;
 import com.fawkes.plugin.collectables.CollectablesPlugin;
 import com.fawkes.plugin.collectables.QueryAward;
 
-public class GiveAwardCommand implements CommandExecutor {
+public class GiveAwardCommand extends BaseCommand {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command arg1, String arg2, String[] args) {

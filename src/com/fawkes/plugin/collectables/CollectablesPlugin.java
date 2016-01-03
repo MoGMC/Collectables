@@ -16,6 +16,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.fawkes.plugin.collectables.command.GiveAwardCommand;
+import com.fawkes.plugin.collectables.command.RemoveAward;
+import com.fawkes.plugin.collectables.command.ShowcaseCommand;
+
 public class CollectablesPlugin extends JavaPlugin {
 	// only allow player that was given key/crate to use it
 
@@ -27,28 +31,23 @@ public class CollectablesPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		this.plugin = this;
+		plugin = this;
 
 		saveDefaultConfig();
 		config = getConfig();
 
 		refreshAwards();
 
-		// Connect to MySQL server
-		try {
-			db = new Database();
-
-		} catch (SQLException e) {
-			Bukkit.getLogger().severe("Failed to connect to MySQL database, disabling.");
-			e.printStackTrace();
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
-
-		}
+		refreshDatabase();
 
 		// register Listeners
 		Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+
+		// register commands
+		getCommand("giveaward").setExecutor(new GiveAwardCommand());
+		getCommand("showcase").setExecutor(new ShowcaseCommand());
+		getCommand("removeaward").setExecutor(new RemoveAward());
 
 		// register this as an api for bukkit
 		this.getServer().getServicesManager().register(CollectablesPlugin.class, this, this, ServicePriority.Normal);
@@ -56,6 +55,7 @@ public class CollectablesPlugin extends JavaPlugin {
 	}
 
 	public void refreshAwards() {
+
 		// Set up the little awards database
 		try {
 			AwardFactory.refresh(config.getString("awardfile"));
@@ -71,156 +71,28 @@ public class CollectablesPlugin extends JavaPlugin {
 
 	}
 
+	public void refreshDatabase() {
+
+		// Connect to MySQL server
+		try {
+			db = new Database();
+
+		} catch (SQLException e) {
+			Bukkit.getLogger().severe("Failed to connect to MySQL database, disabling.");
+			e.printStackTrace();
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+
+		}
+
+	}
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
 		String cmd = command.getName().toLowerCase();
 
-		if (cmd.equalsIgnoreCase("showcase")) {
-			// display showcase
-
-			if (!(sender instanceof Player)) {
-				sender.sendMessage("Only players can use this command.");
-				return false;
-
-			}
-
-			String name = sender.getName();
-			UUID uuid = ((Player) sender).getUniqueId();
-			UUID origUuid = uuid;
-
-			// looking at other people's things
-			if (args.length != 0) {
-
-				OfflinePlayer splayer = Bukkit.getOfflinePlayer(args[0]);
-
-				if (splayer == null) {
-					sender.sendMessage(ChatColor.DARK_RED + "Could not find player \"" + args[0] + "\"");
-					return true;
-
-				}
-
-				name = splayer.getName();
-				uuid = splayer.getUniqueId();
-
-			}
-
-			List<QueryAward> awardsList = null;
-
-			awardsList = getAwards(uuid, sender);
-
-			Menu menu = new Menu(name, awardsList);
-
-			// register the new open menu under the player who is OPENING it.
-			// (not the target!)
-
-			MenuFactory.registerOpenMenu(origUuid, menu);
-
-			((Player) sender).openInventory(menu.getMain());
-
-			return true;
-
-		}
-
-		if (cmd.equals("giveaward")) {
-
-			boolean hasmeta = false;
-
-			if (args.length != 3) {
-				if (args.length != 4) {
-					sender.sendMessage("/giveaward <player name> <award> <level> [<meta>]");
-					return true;
-
-				}
-
-				// they might be sending awildcard!
-
-				hasmeta = true;
-
-			}
-
-			if (!AwardFactory.exists(args[1])) {
-				sender.sendMessage("No such award: " + args[1]);
-				return true;
-
-			}
-
-			int level;
-
-			try {
-				level = Integer.valueOf(args[2]);
-
-			} catch (NumberFormatException e) {
-				sender.sendMessage("No such number: " + args[2]);
-				return true;
-
-			}
-
-			OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
-
-			if (p == null) {
-				sender.sendMessage("No such player: " + args[0]);
-				return true;
-
-			}
-
-			try {
-
-				QueryAward a = new QueryAward(args[1], System.currentTimeMillis(), level);
-
-				if (hasmeta) {
-					a.addMeta(args[3]);
-					sender.sendMessage("Added metadata: " + args[3]);
-
-				}
-
-				giveAward(p.getUniqueId(), a);
-
-				sender.sendMessage("Sent.");
-
-			} catch (SQLException e) {
-				sender.sendMessage("Could not award player. SQL error at time: " + System.currentTimeMillis());
-				e.printStackTrace();
-
-			}
-
-			return true;
-
-		}
-
 		if (cmd.equals("removeaward")) {
-
-			if (args.length != 2) {
-				sender.sendMessage("/removeaward <player name> <award>");
-				return true;
-
-			}
-
-			if (!AwardFactory.exists(args[1])) {
-				sender.sendMessage("No such award: " + args[1]);
-				return true;
-
-			}
-
-			OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
-
-			if (p == null) {
-				sender.sendMessage("No such player: " + args[0]);
-				return true;
-
-			}
-
-			try {
-				sender.sendMessage("Query returned: " + db.removeAward(p.getUniqueId(), args[1]));
-
-			} catch (SQLException e) {
-				sender.sendMessage(
-						"Could not remove award from player. SQL error at time: " + System.currentTimeMillis());
-				e.printStackTrace();
-
-			}
-
-			return true;
 
 		}
 
@@ -249,12 +121,22 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		}
 
+		if (cmd.equals("refreshawardsdb")) {
+			refreshDatabase();
+
+			sender.sendMessage("Refreshsed awards database.");
+
+			return true;
+
+		}
+
 		return false;
 
 	}
 
 	public static CollectablesPlugin getPlugin() {
 		return plugin;
+
 	}
 
 	/* static methods */
@@ -321,11 +203,11 @@ public class CollectablesPlugin extends JavaPlugin {
 
 	// assuming you did all the checks before
 	public void giveAward(UUID uuid, QueryAward a) throws SQLException {
-		giveAward(uuid, a, true);
+		giveAward(uuid, a, true, true);
 
 	}
 
-	public void giveAward(UUID uuid, QueryAward a, boolean callEvent) throws SQLException {
+	public void giveAward(UUID uuid, QueryAward a, boolean callEvent, boolean showMessages) throws SQLException {
 
 		// call custom event
 		if (callEvent) {
@@ -341,7 +223,14 @@ public class CollectablesPlugin extends JavaPlugin {
 
 		// if they're online now, display now. if not, store it away.
 		if (p.isOnline()) {
-			sendAwardMessages(p.getPlayer(), AwardFactory.getName(a));
+
+			if (showMessages) {
+				sendAwardMessages(p.getPlayer(), AwardFactory.getName(a));
+
+			} else {
+				sendAwardMessagesToPlayer(p.getPlayer(), AwardFactory.getName(a));
+
+			}
 
 		} else {
 			storeOfflineAward(uuid, a);
@@ -351,8 +240,8 @@ public class CollectablesPlugin extends JavaPlugin {
 	}
 
 	// assuming you did checks before?
-	public void removeAward(UUID uuid, String awardid) throws SQLException {
-		db.removeAward(uuid, awardid);
+	public boolean removeAward(UUID uuid, String awardid) throws SQLException {
+		return db.removeAward(uuid, awardid);
 
 	}
 
@@ -373,7 +262,7 @@ public class CollectablesPlugin extends JavaPlugin {
 
 	}
 
-	public void sendAwardMessages(Player p, String awardName) {
+	public void sendAwardMessagesToPlayer(Player p, String awardName) {
 
 		StringBuilder s = new StringBuilder(ChatColor.GOLD.toString());
 
@@ -383,6 +272,10 @@ public class CollectablesPlugin extends JavaPlugin {
 		s.append("]! Type /showcase to view all of your awards.");
 
 		p.sendMessage(s.toString());
+
+	}
+
+	public void sendAwardMessagesToServer(Player p, String awardName) {
 
 		StringBuilder s1 = new StringBuilder(ChatColor.GREEN.toString());
 
@@ -394,6 +287,14 @@ public class CollectablesPlugin extends JavaPlugin {
 		s1.append("]!");
 
 		Bukkit.broadcastMessage(s1.toString());
+
+	}
+
+	public void sendAwardMessages(Player p, String awardName) {
+
+		sendAwardMessagesToPlayer(p, awardName);
+
+		sendAwardMessagesToServer(p, awardName);
 
 	}
 
