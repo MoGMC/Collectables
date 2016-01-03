@@ -138,7 +138,7 @@ topvoter:
   name: '&rJanuary 2016 Award'
   type: 'snowball'
   category: monthly
-  display: SNOWBALL
+  display: SNOW_BALL
   description:
     - '&eHappy new year!'
 2016newyear:
