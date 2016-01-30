@@ -148,3 +148,10 @@ topvoter:
   display: FIREWORK
   description:
     - '&fMonkeyCraft wishes you a happy new year!'
+2016february:
+  name: '&efebruaru'
+  type: 'februaru'
+  category: monthly
+  display: SNOWBALL
+  description:
+    - '&eIt's februaru!'
