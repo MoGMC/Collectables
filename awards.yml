@@ -152,6 +152,6 @@ topvoter:
   name: '&efebruaru'
   type: 'februaru'
   category: monthly
-  display: SNOWBALL
+  display: SNOW_BALL
   description:
     - '&eIt''s februaru!'
