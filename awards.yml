@@ -155,7 +155,7 @@ topvoter:
   display: SNOW_BALL
   description:
     - '&eIt''s februaru!'
-2016march
+2016march:
   name: '&aMarch award'
   type: 'not duplicate tree'
   category: monthly
