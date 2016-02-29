@@ -155,3 +155,11 @@ topvoter:
   display: SNOW_BALL
   description:
     - '&eIt''s februaru!'
+2016march
+  name: '&aMarch award'
+  type: 'not duplicate tree'
+  category: monthly
+  display: SAPLING
+  description:
+    - "March, what a nice month."
+    - "As the snow melts away and flowers bloom, I think to myself, ''Boy it is great to be alive.''"
