@@ -162,7 +162,8 @@ topvoter:
   display: SAPLING
   description:
     - "March, what a nice month."
-    - "As the snow melts away and flowers bloom, I think to myself,"
+    - "As the snow melts away and flowers bloom"
+    - "I think to myself,"
     - "''Boy it is great to be alive.''"
 2016april:
   name: '&eApril Award'
