@@ -61,7 +61,7 @@ public class ShowcaseCommand extends BaseCommand {
 		((Player) sender).openInventory(menu.getMain());
 
 		return true;
-		
+
 	}
 
 }

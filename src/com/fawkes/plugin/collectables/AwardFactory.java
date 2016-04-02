@@ -8,7 +8,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
@@ -39,10 +38,11 @@ public class AwardFactory {
 
 		File file = new File("awards.yml");
 
-		@SuppressWarnings("resource")
 		FileOutputStream fos = new FileOutputStream(file);
 
 		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+
+		fos.close();
 
 		awards = YamlConfiguration.loadConfiguration(file);
 

@@ -118,7 +118,14 @@ public class MenuFactory {
 			}
 		}
 
-		return createItemInventory(playerName + "'s " + category.toString() + " Awards", playerName, desiredAwards);
+		String invName = playerName + "'s " + category.toString() + " Awards";
+
+		if (invName.length() > 32) {
+			invName = category.toString() + " Awards";
+
+		}
+
+		return createItemInventory(invName, playerName, desiredAwards);
 
 	}
 
@@ -159,6 +166,7 @@ public class MenuFactory {
 	// TODO: should we really do this every time?
 	public static ItemStack backButton() {
 
+		@SuppressWarnings("deprecation")
 		ItemStack button = new ItemStack(Material.WOOL, 1, DyeColor.RED.getData());
 
 		ItemMeta meta = button.getItemMeta();
