@@ -167,6 +167,7 @@ topvoter:
 2016april:
   name: '&eApril Award'
   type: 'rain pail'
+  category: monthly
   display: WATER_BUCKET
   description:
     - "&rIf April showers bring May flowers,"
