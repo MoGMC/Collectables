@@ -173,3 +173,10 @@ topvoter:
   description:
     - "&rIf April showers bring May flowers,"
     - "&rwhat do May flowers bring?"
+2016june:
+  name: '&rJune Days'
+  type: 'faulty database'
+  category: monthly
+  display: BOOK
+  description:
+    - "&eHosting killed May"
