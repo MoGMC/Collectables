@@ -1,4 +1,4 @@
-awardfile: 'https://raw.githubusercontent.com/seawee65/Collectables/master/awards.yml'
+awardfile: 'https://github.com/MoGMC/Collectables/blob/master/awards.yml'
 #lore
 Holiday:
   - '&f&oGiven when joining on a specific holiday.'
